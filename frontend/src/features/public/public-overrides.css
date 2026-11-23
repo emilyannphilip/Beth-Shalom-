@@ -1,0 +1,87 @@
+.public-dialog-frame {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+}
+
+.public-dialog-frame::backdrop {
+  background: transparent;
+}
+
+html:has([data-interface="public"] dialog[open]) {
+  overflow: hidden;
+}
+
+[data-interface="public"] #enquiry-welcome-modal.enquiry-backdrop {
+  display: flex;
+}
+
+.public-dialog-frame[data-ready] #enquiry-welcome-modal.enquiry-backdrop,
+.public-dialog-frame[data-ready] #enquiry-welcome-modal .enquiry-dialog-panel {
+  opacity: 1;
+  transform: none;
+}
+
+#space-modal > div,
+#gallery-modal > div {
+  max-height: min(921px, calc(100dvh - 2rem));
+}
+
+[data-interface="public"] main [id] {
+  scroll-margin-top: 7rem;
+}
+
+html:has([data-interface="public"])::-webkit-scrollbar {
+  display: none;
+}
+
+[data-interface="public"] .request-dialog-note {
+  margin: 0.6rem 0 1.2rem;
+}
+/* The Google icon stylesheet supplies 24px by default. Preserve the authored utility sizes. */
+:where([data-interface="public"]) .material-symbols-outlined.text-\[14px\] {
+  font-size: 14px;
+}
+:where([data-interface="public"]) .material-symbols-outlined.text-\[16px\] {
+  font-size: 16px;
+}
+:where([data-interface="public"]) .material-symbols-outlined.text-\[18px\] {
+  font-size: 18px;
+}
+:where([data-interface="public"]) .material-symbols-outlined.text-\[19px\] {
+  font-size: 19px;
+}
+:where([data-interface="public"]) .material-symbols-outlined.text-\[20px\] {
+  font-size: 20px;
+}
+:where([data-interface="public"]) .material-symbols-outlined.text-\[22px\] {
+  font-size: 22px;
+}
+:where([data-interface="public"]) .material-symbols-outlined.text-\[24px\] {
+  font-size: 24px;
+}
+:where([data-interface="public"]) .material-symbols-outlined.text-\[26px\] {
+  font-size: 26px;
+}
+:where([data-interface="public"]) .material-symbols-outlined.text-\[28px\] {
+  font-size: 28px;
+}
+:where([data-interface="public"]) .material-symbols-outlined.text-\[32px\] {
+  font-size: 32px;
+}
+:where([data-interface="public"]) .material-symbols-outlined.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+:where([data-interface="public"]) .material-symbols-outlined.text-6xl {
+  font-size: 3.75rem;
+  line-height: 1;
+}

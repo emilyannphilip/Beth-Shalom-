@@ -1,0 +1,9 @@
+@import "tailwindcss" source(none);
+@source "../components";
+@source "./(portal)";
+
+@layer base {
+  body {
+    margin: 0;
+  }
+}
