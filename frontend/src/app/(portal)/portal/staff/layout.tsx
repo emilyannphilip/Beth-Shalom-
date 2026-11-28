@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-import { DemoRoute } from "@/features/portal/demo-session";
-
+import { ServerPortalGate } from "@/features/portal/server-gate";
 export default function StaffLayout({ children }: { children: ReactNode }) {
-  return <DemoRoute role="staff">{children}</DemoRoute>;
+  return <ServerPortalGate role="staff">{children}</ServerPortalGate>;
 }

@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { SiteImage } from "./site-image";
+import { PublicRoomAvailability } from "./room-availability";
 
 const suites = {
   nest: {
@@ -259,6 +260,11 @@ export function VisualizerImage({
       }
     />
   );
+}
+
+export function VisualizerAvailability() {
+  const { suite } = useContext(VisualizerContext);
+  return <PublicRoomAvailability category={suite} />;
 }
 
 export function SuiteText({ field }: { field: "title" | "description" }) {

@@ -2,11 +2,11 @@
 import { PortalLogo } from "../portal-logo";
 import { PortalFrame } from "../portal-frame";
 import { useLogout } from "../auth-interactions";
-import { DemoRoute } from "../demo-session";
+import { PortalRoute } from "../portal-session";
 export function PortalLogout() {
   const ui = useLogout();
   return (
-    <DemoRoute role="signed-in">
+    <PortalRoute role="signed-in">
       <PortalFrame auth>
         <header className="portal-auth-header w-full border-b flex items-center justify-between">
           <div className="portal-auth-brand">
@@ -87,10 +87,15 @@ export function PortalLogout() {
                 </span>
                 <span className="text-success font-medium flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-success"></span>{" "}
-                  Demo Session Only
+                  Signed-in Session
                 </span>
               </div>
             </div>
+            {ui.error && (
+              <p role="alert" className="text-error">
+                {ui.error}
+              </p>
+            )}
             <div className="portal-auth-actions pt-2">
               <button
                 type="button"
@@ -114,7 +119,7 @@ export function PortalLogout() {
                     >
                       refresh
                     </span>
-                    <span>Ending Demo Session…</span>
+                    <span>Signing out…</span>
                   </>
                 ) : (
                   <>
@@ -130,15 +135,14 @@ export function PortalLogout() {
               </button>
             </div>
             <p className="text-body-sm text-outline mt-6">
-              Signing out ends this demo session. Sample edits stay in memory
-              until this portal tab refreshes.
+              Signing out ends your current portal session.
             </p>
           </div>
         </main>
         <footer className="portal-auth-footer py-4 text-center text-body-sm text-on-surface-variant border-t">
-          Beth Shalom Retirement Home • Demo Portal Session Manager
+          Beth Shalom Retirement Home • Portal Session Manager
         </footer>
       </PortalFrame>
-    </DemoRoute>
+    </PortalRoute>
   );
 }

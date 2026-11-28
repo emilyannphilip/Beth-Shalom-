@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PublicRoomAvailability } from "../room-availability";
 import { SiteImage } from "../site-image";
 import { PreviewForm, PreviewFeedback } from "../preview-form";
 import {
@@ -176,7 +177,7 @@ function HarmonyShowcase() {
                 Full Geriatric Accessibility
               </span>{" "}
               <span className="px-3 py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm">
-                Floors: 1st &amp; 2nd Level
+                <PublicRoomAvailability category="HARMONY" field="floor" />
               </span>
             </div>
             <h1 className="font-headline-xl text-headline-xl text-primary font-bold tracking-tight">
@@ -285,7 +286,7 @@ function HarmonyShowcase() {
                 Availability
               </p>
               <p className="font-headline-sm text-headline-sm text-primary font-bold">
-                4 Units Sanctioned
+                <PublicRoomAvailability category="HARMONY" />
               </p>
             </div>
           </div>
@@ -296,7 +297,7 @@ function HarmonyShowcase() {
               <SiteImage
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 data-alt="Expansive interior of Harmony Suite retirement living room with solid teak furniture, warm afternoon sunlight pouring through floor-to-ceiling balcony doors opening to lush misty Kerala hillside hills, cream ceramic slip-resistant floor, comfortable senior-ergonomic sofa and dining set, lush botanical plants inside."
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNe_RUr2n-Zqd-4kpvOcnJM7oYILtuBzqoLqiV7uX1j7FFdEB59c_6xQCR6enXVZK_V1D0fRj1dK52coPgxp8eZRLkP4kX_NcRcz2C-sWIXZR4K_b0X11NQTlQl2IwCrWhZoAmqeTlShYVPySu4Vro1hkp0q3QqVBw6_T27EwwyLx3cpr7WmuXvi-zTk5E2Tw1Job-W6jWuN6SGwI2XYZGGzrCw3pwNBy6Ra-a6Q"
+                src="/beth-shalom/assets/design/harmony-4cde6123c5f2.webp"
                 alt=""
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent"></div>
@@ -330,7 +331,7 @@ function HarmonyShowcase() {
               <SiteImage
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 data-alt="Senior-friendly European ensuite bathroom with polished stainless steel safety grab rails mounted beside toilet and shower stall, zero-threshold barrier-free walk-in shower area, emergency pull-cord alarm bell, textured anti-slip warm terracotta tiles, soft warm overhead lighting."
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeymv9OMusDNnMThYDFd-5O3krMc7DGio7mTt4sDaUR8ewMNP-EURwg9A0pf5-QwGpzUYYNvRld7v5uPVLsaMUgX--0KhAMWakzXc7cDOLpHVi_-Fs2M7bWJ5E6mXz8RZiJBc3ApB_DWVweMRI2uA57nzz3ylMgXOp74jTEH8WOCED-YVTypMEoy9urFXbj4IpWtk4dgJXkNXabmV1XZbgzh-GWEYvRpGFwAXl2Q"
+                src="/beth-shalom/assets/design/harmony-53dd4ffbbbd5.webp"
                 alt=""
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent"></div>
@@ -347,7 +348,7 @@ function HarmonyShowcase() {
               <SiteImage
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 data-alt="Master bedroom in Harmony Suite with wide clearance around orthopedic twin beds, natural teak headboard, bedside nurse alert call console, direct access sliding glass door to an independent veranda overlooking coconut palms and Dayara forest landscape."
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmvKaWoPdq-BQUBPDRWPLSIdLDm6T7eohWRcynUbUT7x8bj9uoiS9XBoRgHG8u6tbhXKmNgkftqqABFTS3nYcwaXEordzqybJ6z47tGvJ_Sgw5MMNaGgvxmbWtB3Cu42cO8d0R7t5tdobzThS5nbydqI-gbn57L03tJXmzXaxxRYsQxzZJm0JRyYvfBgLcOVAXmtFMlWeumn4QoPeVaVtCVSAwgooNnGKj3wnOpQ"
+                src="/beth-shalom/assets/design/harmony-ad6eb3f984e5.webp"
                 alt=""
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent"></div>
@@ -673,7 +674,7 @@ function HarmonyFloorPlan() {
                 <SiteImage
                   className="w-full h-full object-contain p-2"
                   data-alt="High precision top-down architectural colored floor plan rendering of the Harmony Suite showing two complete balconies, master bedroom with orthopedic twin beds, open living room with dining table, kitchenette corner, two wheelchair accessible full bathrooms, labeled dimensions and turning radius in muted architectural tones."
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOsYf7uXG4FtA4cVNyPgtlBx3i5ntU6mapNSyNjs0M52zR44RH2LDCY7tAWPH6drl5nmZmIf5snxhzDgBkSqF0leSbEhmZVrTpk2bMmUqYrd_rA_iIHTghFPDnlOXhJ5zp_-uvYgzL_C6Y95wfgB3KUAiJUrEU4LIcfGgriiV6SOk1UmM5GpXT7iVFkyw8h64a_vIXVFFDbMPqacumffLOjXFwHD9n8je_8rXrnA"
+                  src="/beth-shalom/assets/design/harmony-d3d4c9bbbc98.webp"
                   alt=""
                 />
                 <div className="absolute top-[28%] left-[24%]">
@@ -978,7 +979,11 @@ function HarmonyEnquiry() {
             </div>
           </div>
           <div className="lg:col-span-7 p-8 rounded-xl bg-surface-container-lowest shadow-md flex flex-col justify-between">
-            <PreviewForm className="flex flex-col gap-5" id="suiteInquiryForm">
+            <PreviewForm
+              className="flex flex-col gap-5"
+              id="suiteInquiryForm"
+              source="HARMONY_SUITE_APPLICATION"
+            >
               <div>
                 <h3 className="font-headline-sm text-headline-sm text-primary mb-1">
                   Schedule an On-Site Tour or Receive Admissions Pack
@@ -999,6 +1004,7 @@ function HarmonyEnquiry() {
                   <input
                     className="w-full min-h-[52px] px-4 rounded-lg bg-surface-container-low text-on-surface font-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-secondary"
                     id="applicantName"
+                    name="applicantName"
                     placeholder="e.g., Joseph Varghese"
                     required
                     type="text"
@@ -1014,6 +1020,7 @@ function HarmonyEnquiry() {
                   <input
                     className="w-full min-h-[52px] px-4 rounded-lg bg-surface-container-low text-on-surface font-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-secondary"
                     id="applicantPhone"
+                    name="applicantPhone"
                     placeholder="+91 98470 00000"
                     required
                     type="tel"
@@ -1031,6 +1038,7 @@ function HarmonyEnquiry() {
                   <input
                     className="w-full min-h-[52px] px-4 rounded-lg bg-surface-container-low text-on-surface font-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-secondary"
                     id="applicantEmail"
+                    name="applicantEmail"
                     placeholder="name@domain.com"
                     required
                     type="email"
@@ -1046,6 +1054,7 @@ function HarmonyEnquiry() {
                   <select
                     className="w-full min-h-[52px] px-4 rounded-lg bg-surface-container-low text-on-surface font-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-secondary font-medium"
                     id="selectedCategory"
+                    name="selectedCategory"
                     defaultValue="harmony"
                   >
                     <option value="harmony">
@@ -1076,6 +1085,7 @@ function HarmonyEnquiry() {
                   <select
                     className="w-full min-h-[52px] px-4 rounded-lg bg-surface-container-low text-on-surface font-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-secondary font-medium"
                     id="careRequirement"
+                    name="careRequirement"
                   >
                     <option>Independent Senior Retirement</option>
                     <option>Assisted Senior Living (Mobility Support)</option>
@@ -1095,6 +1105,7 @@ function HarmonyEnquiry() {
                   <input
                     className="w-full min-h-[52px] px-4 rounded-lg bg-surface-container-low text-on-surface font-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-secondary"
                     id="tourDate"
+                    name="tourDate"
                     type="date"
                   />
                 </div>
@@ -1109,6 +1120,7 @@ function HarmonyEnquiry() {
                 <textarea
                   className="w-full p-4 rounded-lg bg-surface-container-low text-on-surface font-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-secondary resize-none"
                   id="additionalNotes"
+                  name="additionalNotes"
                   placeholder="Please specify if wheelchair assistance, diabetic diets, or specific medical devices are used..."
                   rows={3}
                 ></textarea>
@@ -1117,6 +1129,7 @@ function HarmonyEnquiry() {
                 <input
                   className="w-5 h-5 rounded text-secondary focus:ring-secondary mt-0.5"
                   id="consent"
+                  name="consent"
                   required
                   type="checkbox"
                 />
@@ -1139,7 +1152,7 @@ function HarmonyEnquiry() {
                 >
                   send
                 </span>{" "}
-                <span>Submit Admission Inquiry for Harmony Suite</span>
+                <span>Submit Admission Enquiry for Harmony Suite</span>
               </button>
               <PreviewFeedback
                 className="p-4 rounded-lg bg-secondary-container text-on-secondary-container flex items-center gap-3"
@@ -1496,7 +1509,7 @@ function PhotoArchive() {
             <SiteImage
               className="w-full h-full object-cover"
               data-alt="Harmony suite spacious sunny veranda facing the lush green hills of Pampady Kerala with cane patio chairs and potted blooming jasmine plants."
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt2UYdSblkDtZU0vReM1Zaz8Pjgm56XH5yia9-ZNYKfxYl2qSAB9wJQ6z9mFq2yRG6bFMYt6d_y6rUo4-p7R1HmCx3aTB8i7_5cncKYwjlBOm3ZwbGCOsUQpbuI0SLlxyzUP9dycvBKZsa3ohsMhqpQ9pBXhEdyWew1rZs8wxF09SGtSYsi3JFWnSIeRd6cIwmktRjmehFHm6AqclqCbi9ACWMgq_v9dmg_nkENw"
+              src="/beth-shalom/assets/design/harmony-2c31772e2e35.webp"
               alt=""
             />
           </div>
@@ -1504,7 +1517,7 @@ function PhotoArchive() {
             <SiteImage
               className="w-full h-full object-cover"
               data-alt="Open plan kitchenette inside Harmony suite featuring granite countertop, induction cooker, microwave, polished upper cabinets, and senior-height reachable storage."
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSfpOmKMcHp0WAM0QTjtUmcTN7YTMdQfSwUWwOGGTXwXINW03_Fwf1o2EDfvzBfKHpGA0tVeg45kEgp7vxeHyKVmYKMi04sZdZuGwG1cOq951SoYSV2x_ByBiz2OfGrvuZ3x9rI7RbdEPGAppPQIdgdA2HsfXKBff4K0Ys1eM7mSpDQ4om_v3EKVKz1iReDnkczDZXn9xC3Ros8kIQnwKE_SqzuS4h0Laj_Xjs5A"
+              src="/beth-shalom/assets/design/harmony-af44e55cdf01.webp"
               alt=""
             />
           </div>
@@ -1512,7 +1525,7 @@ function PhotoArchive() {
             <SiteImage
               className="w-full h-full object-cover"
               data-alt="Senior twin bedroom setup with emergency bedside push cord, soft indirect warm lighting, reading lamp, and large window overlooking misty forest valley."
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8hwgLKezSjvGfrulFQzbSxoxhj8umN3d696WV5YiCPkMNfXCebAUNyhajudHkKUOpNJSMwgkz8bdBQ79NsPhDtte8uLvZfuoCepTxfba0VgzHVk571aH-V6eQ-ibyu6UTsffrFHGYpaPXnSNtcU05vZ8TRxyIiXsu56rIvtOygQ25Oq02GGlGrmSizKDqv12E2_pRYiBXPq0rk-QaKSMx3s0uGr1dam7K2UoXMQ"
+              src="/beth-shalom/assets/design/harmony-1300ba00afaa.webp"
               alt=""
             />
           </div>
@@ -1520,7 +1533,7 @@ function PhotoArchive() {
             <SiteImage
               className="w-full h-full object-cover"
               data-alt="Close up view of the European senior toilet in Harmony suite with stainless steel support arms, non-skid floor tiles, and walk-in zero transition shower floor."
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxKTDO2SFGiSrqjX7UY8jRVMgggX06KgHGGjCuzDx5AhfMi4DI9X8gWG72ExXIDTHzDCb4sHrZTZz2_pzJ2myVn9UF7i8scpvKmnqUPco1Mu_1WbDAgX1SxzfwUoN0llhcNQ8wZcrx9F-6HwhXBTtXRTp8Cm7JpyXrxof4u6EiI2v4_5OrRHK7dy83XUXHhshXH8pUEMZVvgypMSsM-WMPg0k3wyJC9QRt8QnF1g"
+              src="/beth-shalom/assets/design/harmony-ac56866f91df.webp"
               alt=""
             />
           </div>
@@ -1540,7 +1553,7 @@ function PhotoArchive() {
 }
 export function HarmonyContent() {
   return (
-    <main className="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]">
+    <main className="w-full bg-surface">
       <div className="flex flex-col w-full">
         <GalleryProvider>
           <HarmonyBreadcrumb />

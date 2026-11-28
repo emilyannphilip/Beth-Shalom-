@@ -44,14 +44,14 @@ function ContactIntro() {
         </div>
         <div className="max-w-4xl">
           <span className="font-label-md text-label-md uppercase tracking-wider text-secondary font-bold block mb-2">
-            Plan Your Visit &amp; Inquiry
+            Plan Your Visit &amp; Enquiry
           </span>
           <h1 className="font-headline-xl text-headline-xl text-primary tracking-tight mb-space-sm leading-tight">
             Get in Touch &amp; Plan Your Visit to Beth Shalom
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
             Located in the tranquil hills of Elakodinji, Pampady. Whether you
-            are inquiring about admissions for your loved ones, seeking
+            are enquiring about admissions for your loved ones, seeking
             spiritual peace, or planning an accompanied campus tour, our
             administrative and care counseling team is here to assist you with
             unhurried hospitality.
@@ -169,7 +169,7 @@ function ContactOptions() {
               </span>
             </div>
             <span className="font-label-sm text-label-sm uppercase tracking-wide text-secondary font-bold">
-              Written Inquiries
+              Written Enquiries
             </span>
             <h2 className="font-headline-sm text-headline-sm text-primary mt-1 mb-2">
               Electronic Mail
@@ -237,7 +237,7 @@ function ContactOptions() {
           </div>
           <a
             className="inline-flex items-center justify-center min-h-[52px] w-full px-4 py-3 rounded-lg bg-secondary text-on-secondary font-label-md text-label-md hover:bg-primary transition-colors focus:ring-4 focus:ring-tertiary-fixed-dim"
-            href="https://wa.me/918289838745?text=Hello%20Beth%20Shalom%2C%20I%20would%20like%20to%20inquire%20about%20admissions%20and%20schedule%20a%20visit."
+            href="https://wa.me/918289838745?text=Hello%20Beth%20Shalom%2C%20I%20would%20like%20to%20enquire%20about%20admissions%20and%20schedule%20a%20visit."
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -462,7 +462,7 @@ function DirectionsAndMap() {
                 data-location="Pampady, Kottayam, Kerala"
                 style={{
                   backgroundImage:
-                    "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAa6KQcAFUstdhrBaG2hfcUKt6sVxmQClkGhBbLlo-s34tLIddKr2iHXXSSWGy7biFtZZDjTwyPq30_cXP6ZPXNGR7stv_yNhB8Grqcv6-qLNmMHVtGkD7ia3iwy-j6dI7MbDszJxZlGbxo0Y_V0TSFqUGmJ5GT1znz1PApcJ9Gz-uPN1NhldID4sJKlDwEjNUaqTmdUHPnce6v-Z03v6rlmO4FfD4IeSEluc3zWQ')",
+                    "url('/beth-shalom/assets/design/contact-6681116d7dc4.webp')",
                 }}
               >
                 <div className="absolute inset-0 bg-primary/20 backdrop-blur-[1px]"></div>
@@ -648,6 +648,7 @@ function CampusWalkthrough() {
           <PreviewForm
             className="space-y-space-md"
             id="visitInquiryForm"
+            source="CONTACT_ENQUIRY"
             resetAfterValidation
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
@@ -656,7 +657,7 @@ function CampusWalkthrough() {
                   className="font-label-md text-label-md font-bold text-primary"
                   htmlFor="fullName"
                 >
-                  Full Name of Inquirer / Guardian{" "}
+                  Full Name of Enquirer / Guardian{" "}
                   <span className="text-error">*</span>
                 </label>
                 <input
@@ -1031,7 +1032,7 @@ function VisitFaq() {
 }
 export function ContactContent() {
   return (
-    <main className="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]">
+    <main className="w-full bg-surface">
       <div className="flex flex-col w-full">
         <ContactIntro />
         <ContactOptions />

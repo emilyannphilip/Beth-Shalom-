@@ -7,6 +7,7 @@ import {
   VisualizerClearance,
   VisualizerImage,
   SuiteText,
+  VisualizerAvailability,
 } from "../visualizer-interactions";
 function VisualizerBreadcrumb() {
   return (
@@ -370,7 +371,7 @@ function PlanInspector() {
                   className="w-full h-full object-cover"
                   data-alt="Detailed architectural 3D cutaway floor plan of the Harmony retirement suite with master bedroom, attached ensuite bathroom with grab bars, open kitchenette, dining niche, living room area, and dual panoramic private sit-out balconies surrounded by lush Kerala greenery in soft morning sunlight, rendered with high tactile realism and muted tones"
                   id="active-floor-image"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcI9npGdmDsnXhRPzP5tXgzsr2ulhJYVt-I6YKjDNLjcMwLE2QmuRwFmANWioiVX71blEGpE9gjfXLahTJlQGKBeeUCs0A04TOXdiuVRgz-YyE9I4jOu9ccNOo4p-4FgeerFb8FGqxwFQzZ2-ryOaxZoZSg6-F2jBDwUbipIkBZQy0U6D_3vz_2k-zdCitEDKqGGpG1sqI0ar9mstBnnx9bCwg0wzYf5OQJqMMNA"
+                  src="/beth-shalom/assets/design/visualizer-f7d06551680f.webp"
                   alt=""
                 />
                 <VisualizerClearance
@@ -734,7 +735,7 @@ function PlanInspector() {
               </div>
               <div className="flex flex-col items-end">
                 <span className="px-2.5 py-1 rounded-md bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
-                  4 Available
+                  <VisualizerAvailability />
                 </span>{" "}
                 <span className="text-xs text-on-surface-variant mt-1">
                   Levels 1 &amp; 2
@@ -1099,7 +1100,7 @@ function VisualizerVisit() {
 }
 export function VisualizerContent() {
   return (
-    <main className="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]">
+    <main className="w-full bg-surface">
       <div className="flex flex-col w-full">
         <VisualizerProvider>
           <VisualizerBreadcrumb />

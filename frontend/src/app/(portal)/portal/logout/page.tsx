@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { PortalLogout } from "@/features/portal/screens/logout";
-export const metadata: Metadata = { title: { absolute: "Logout — Beth Shalom Retirement Home" } };
+import { ServerPortalGate } from "@/features/portal/server-gate";
+export const metadata: Metadata = {
+  title: { absolute: "Logout — Beth Shalom Retirement Home" },
+};
 export default function Page() {
-  return <PortalLogout />;
+  return (
+    <ServerPortalGate role="signed-in">
+      <PortalLogout />
+    </ServerPortalGate>
+  );
 }

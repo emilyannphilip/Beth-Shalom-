@@ -35,8 +35,16 @@ html:has([data-interface="public"] dialog[open]) {
   max-height: min(921px, calc(100dvh - 2rem));
 }
 
+html:has([data-interface="public"]) {
+  scroll-padding-top: var(--public-header-height, 7rem);
+}
+
+[data-interface="public"] [data-page] > main {
+  min-height: calc(100vh - var(--public-header-height, 7rem));
+}
+
 [data-interface="public"] main [id] {
-  scroll-margin-top: 7rem;
+  scroll-margin-top: 0.5rem;
 }
 
 html:has([data-interface="public"])::-webkit-scrollbar {

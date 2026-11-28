@@ -18,7 +18,3 @@ export function PortalFrame({
     </div>
   );
 }
-
-export function DemoNotice() {
-  return <p className="portal-demo-notice">Demo workspace · Sample records only</p>;
-}

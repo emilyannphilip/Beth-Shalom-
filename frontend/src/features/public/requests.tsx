@@ -2,6 +2,13 @@
 
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { useModal } from "./modal";
+import { errorMessage } from "@/lib/api";
+import {
+  childrenSupportSource,
+  submitEnquiry,
+  type Receipt,
+  type Source,
+} from "./enquiry-api";
 
 const INDIA_TIME_ZONE = "Asia/Kolkata";
 const phonePattern = "[+]?[0-9](?:[0-9 .\\-]*[0-9])?";
@@ -171,28 +178,121 @@ function WalkthroughFields({ minDate }: { minDate: string }) {
   );
 }
 
+function ChildrenSupportFields() {
+  return (
+    <>
+      <RequestInput
+        label="Child’s Name"
+        name="child-name"
+        type="text"
+        maxLength={150}
+        optional
+      />
+      <RequestInput
+        label="Child’s Age"
+        name="child-age"
+        type="number"
+        inputMode="numeric"
+        min={0}
+        max={130}
+        step={1}
+        optional
+      />
+      <RequestNotes
+        label="Accommodation Requirements"
+        name="accommodation-requirements"
+        rows={2}
+        maxLength={1500}
+        required
+      />
+      <RequestNotes
+        label="Care and Support Requirements"
+        name="care-requirements"
+        rows={2}
+        maxLength={1500}
+        aria-describedby="children-support-privacy"
+      />
+      <small id="children-support-privacy" className="request-dialog-wide">
+        Share practical support needs only. Please leave out diagnoses and
+        medical records.
+      </small>
+      <RequestNotes
+        label="Additional Message"
+        name="message"
+        rows={2}
+        maxLength={1500}
+        required
+      />
+    </>
+  );
+}
+
+const requestTypes = {
+  room: {
+    title: "Apply for This Room Category",
+    result: "Application received",
+    submit: "Submit Application",
+    source: "ROOM_APPLICATION",
+  },
+  dormitory: {
+    title: "Enquire About Dormitory Accommodation",
+    result: "Enquiry received",
+    submit: "Submit Enquiry",
+    source: "DORMITORY_ENQUIRY",
+  },
+  facilities: {
+    title: "Enquire About Facilities",
+    result: "Enquiry received",
+    submit: "Submit Request",
+    source: "FACILITIES_ENQUIRY",
+  },
+  walkthrough: {
+    title: "Schedule the Campus Walkthrough",
+    result: "Visit request received",
+    submit: "Submit Request",
+    source: "CAMPUS_WALKTHROUGH",
+  },
+  "children-support": {
+    title: "Enquire About Care & Support",
+    result: "Enquiry received",
+    submit: "Submit Enquiry",
+    source: childrenSupportSource,
+  },
+} satisfies Record<
+  string,
+  { title: string; result: string; submit: string; source: Source }
+>;
+
 export function RequestAction({
   kind,
   category = "",
+  categoryId,
   children,
   ...props
 }: ComponentProps<"button"> & {
-  kind: "room" | "walkthrough";
+  kind: keyof typeof requestTypes;
   category?: string;
+  categoryId?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const [validated, setValidated] = useState(false);
+  const [receipt, setReceipt] = useState<Receipt | null>(null);
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+  const busy = useRef(false);
   const [minDate, setMinDate] = useState("");
   const resultHeading = useRef<HTMLHeadingElement>(null);
-  const room = kind === "room";
+  const request = requestTypes[kind];
+  const childSupport = kind === "children-support";
   const titleId = `${kind}-request-title`;
   const noteId = `${kind}-request-note`;
-  const dismiss = () => setOpen(false);
+  const dismiss = () => {
+    if (!busy.current) setOpen(false);
+  };
   const dialog = useModal(open, dismiss, 'input[name="full-name"]');
 
   useEffect(() => {
-    if (validated) resultHeading.current?.focus();
-  }, [validated]);
+    if (receipt) resultHeading.current?.focus();
+  }, [receipt]);
 
   return (
     <>
@@ -201,8 +301,9 @@ export function RequestAction({
         type="button"
         aria-haspopup="dialog"
         onClick={() => {
-          setMinDate(currentIndiaDateTime().date);
-          setValidated(false);
+          if (kind === "walkthrough") setMinDate(currentIndiaDateTime().date);
+          setReceipt(null);
+          setError("");
           setOpen(true);
         }}
       >
@@ -223,30 +324,23 @@ export function RequestAction({
               className="request-dialog-close"
               type="button"
               aria-label="Close form"
+              disabled={pending}
               onClick={dismiss}
             >
               ×
             </button>
             <h2 id={titleId} className="font-headline-lg text-headline-lg">
-              {room
-                ? "Apply for This Room Category"
-                : "Schedule the Campus Walkthrough"}
+              {request.title}
             </h2>
             <p id={noteId} className="request-dialog-note">
-              Preview only. Details are cleared when you close or submit this
-              form.
+              We will use these details to respond to your request.
             </p>
-            {validated ? (
+            {receipt ? (
               <div className="request-dialog-result">
                 <h3 ref={resultHeading} tabIndex={-1}>
-                  {room
-                    ? "Preview application validated"
-                    : "Preview visit request validated"}
+                  {request.result}
                 </h3>
-                <p>
-                  No details were sent or saved. No application or booking was
-                  created.
-                </p>
+                <p>Reference {receipt.enquiry_number}.</p>
                 <div className="request-dialog-actions">
                   <button
                     type="button"
@@ -260,12 +354,13 @@ export function RequestAction({
             ) : (
               <form
                 noValidate
+                aria-busy={pending}
                 onInput={(event) => {
                   if (event.target instanceof HTMLInputElement)
                     event.target.setCustomValidity("");
                   validateWalkthroughTime(event.currentTarget);
                 }}
-                onSubmit={(event) => {
+                onSubmit={async (event) => {
                   event.preventDefault();
                   const form = event.currentTarget;
                   for (const field of form.querySelectorAll<
@@ -288,12 +383,32 @@ export function RequestAction({
                     );
                   }
                   validateWalkthroughTime(form);
-                  if (form.reportValidity()) setValidated(true);
+                  if (!form.reportValidity() || busy.current) return;
+                  busy.current = true;
+                  setPending(true);
+                  setError("");
+                  try {
+                    setReceipt(await submitEnquiry(form, request.source));
+                  } catch (failure) {
+                    setError(errorMessage(failure));
+                  } finally {
+                    setPending(false);
+                    busy.current = false;
+                  }
                 }}
               >
+                {categoryId && (
+                  <input
+                    type="hidden"
+                    name="accommodation-category-id"
+                    value={categoryId}
+                  />
+                )}
                 <div className="request-dialog-fields">
                   <RequestInput
-                    label="Full Name"
+                    label={
+                      childSupport ? "Parent / Guardian Name" : "Full Name"
+                    }
                     name="full-name"
                     type="text"
                     autoComplete="name"
@@ -309,7 +424,7 @@ export function RequestAction({
                     required
                   />
                   <RequestInput
-                    label="Phone Number"
+                    label={childSupport ? "Contact Number" : "Phone Number"}
                     name="phone"
                     type="tel"
                     autoComplete="tel"
@@ -319,18 +434,67 @@ export function RequestAction({
                     maxLength={22}
                     required
                   />
-                  {room ? (
-                    <RoomFields category={category} />
-                  ) : (
+                  {kind === "room" && <RoomFields category={category} />}
+                  {kind === "facilities" && (
+                    <RequestNotes
+                      label="Facilities question"
+                      name="message"
+                      maxLength={1500}
+                      required
+                    />
+                  )}
+                  {kind === "dormitory" && (
+                    <>
+                      <RequestInput
+                        label="Accommodation category"
+                        name="room-category"
+                        value={category}
+                        readOnly
+                      />
+                      <RequestNotes
+                        label="Enquiry details"
+                        name="message"
+                        maxLength={1500}
+                        required
+                      />
+                    </>
+                  )}
+                  {kind === "walkthrough" && (
                     <WalkthroughFields minDate={minDate} />
                   )}
+                  {childSupport && <ChildrenSupportFields />}
                 </div>
+                {childSupport && (
+                  <label className="mt-4 flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      name="consent"
+                      required
+                      className="mt-1 h-4 w-4 accent-primary"
+                    />
+                    <span>I consent to be contacted about this enquiry.</span>
+                  </label>
+                )}
+                {pending && (
+                  <p role="status" className="mt-3">
+                    Sending your request…
+                  </p>
+                )}
+                {error && (
+                  <p role="alert" className="mt-3 text-error">
+                    {error}
+                  </p>
+                )}
                 <div className="request-dialog-actions">
-                  <button type="button" onClick={dismiss}>
+                  <button type="button" disabled={pending} onClick={dismiss}>
                     Cancel
                   </button>
-                  <button type="submit" className="request-dialog-primary">
-                    {room ? "Submit Application" : "Submit Request"}
+                  <button
+                    type="submit"
+                    disabled={pending}
+                    className="request-dialog-primary"
+                  >
+                    {pending ? "Sending…" : request.submit}
                   </button>
                 </div>
               </form>

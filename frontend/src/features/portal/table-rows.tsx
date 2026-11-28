@@ -1,6 +1,13 @@
-import type { Enquiry, StaffAccount, Resident, StaffResident } from "./models";
+import {
+  ArchiveResidentAction,
+  EnquiryActions,
+  StaffRecordActions,
+} from "./record-actions";
+import { RecordAction } from "./management-ui";
+import { floorLabel } from "../accommodation/availability";
+import type { Enquiry, StaffAccount, Resident } from "./models";
 import { StatusBadge, badges, statusStyle } from "./status-badge";
-export function AdminEnquiryRow({
+export function EnquiryRow({
   record,
   open,
 }: {
@@ -14,7 +21,7 @@ export function AdminEnquiryRow({
       data-status={record.status}
     >
       <td className="py-3.5 px-4 font-code text-code-md text-primary font-medium whitespace-nowrap">
-        {record.id}
+        {record.number || record.id}
       </td>
       <td className="py-3.5 px-4">
         <div className="font-medium text-on-surface">{record.name}</div>
@@ -58,63 +65,15 @@ export function AdminEnquiryRow({
           className="px-3 py-1.5 text-label-sm font-semibold rounded bg-primary-container text-primary hover:bg-primary hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-primary whitespace-nowrap"
           onClick={() => open(record)}
         >
+          <span
+            className="material-symbols-outlined text-[18px]"
+            aria-hidden="true"
+          >
+            visibility
+          </span>{" "}
           View
         </button>
-      </td>
-    </tr>
-  );
-}
-
-export function StaffEnquiryRow({
-  record,
-  open,
-}: {
-  record: Enquiry;
-  open: (record: Enquiry) => void;
-}) {
-  return (
-    <tr
-      className="hover:bg-surface-variant/40 transition-colors"
-      data-category={record.category}
-      data-status={record.status}
-    >
-      <td className="py-3.5 px-4 font-code text-code-md text-primary font-medium whitespace-nowrap">
-        {record.id}
-      </td>
-      <td className="py-3.5 px-4 font-medium text-on-surface">{record.name}</td>
-      <td className="py-3.5 px-4 tabular-nums text-on-surface-variant">
-        {record.phone}
-      </td>
-      <td className="py-3.5 px-4 text-on-surface-variant">{record.category}</td>
-      <td className="py-3.5 px-4 tabular-nums font-medium text-secondary whitespace-nowrap">
-        {record.visit}
-      </td>
-      <td className="py-3.5 px-4">
-        <StatusBadge
-          status={record.status}
-          className={
-            record.audit?.length
-              ? badges(
-                  record.status,
-                  record.staff?.badgeClass ?? record.badgeClass,
-                )
-              : (record.staff?.badgeClass ?? record.badgeClass)
-          }
-          dot={
-            record.audit?.length && record.staff?.badgeDot
-              ? "w-1.5 h-1.5 rounded-full " + statusStyle(record.status)[1]
-              : record.staff?.badgeDot
-          }
-        />
-      </td>
-      <td className="py-3.5 px-4 text-right min-w-[130px]">
-        <button
-          type="button"
-          className="px-3 py-1.5 rounded-md bg-secondary-container text-secondary font-semibold text-label-sm hover:bg-secondary hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-secondary whitespace-nowrap"
-          onClick={() => open(record)}
-        >
-          Update
-        </button>
+        <EnquiryActions record={record} />
       </td>
     </tr>
   );
@@ -189,6 +148,7 @@ export function StaffAccountRow({
       </td>
       <td className="py-3.5 px-4 text-right min-w-[120px]">
         <div className="inline-flex items-center gap-1">
+          <StaffRecordActions record={record} />
           <button
             type="button"
             title="Edit Staff Record"
@@ -220,9 +180,11 @@ export function StaffAccountRow({
 export function ResidentRow({
   record,
   open,
+  edit,
 }: {
   record: Resident;
   open: (record: Resident) => void;
+  edit: (record: Resident) => void;
 }) {
   return (
     <tr
@@ -231,7 +193,7 @@ export function ResidentRow({
       data-status={record.status}
     >
       <td className="py-3.5 px-4 font-code text-code-md text-primary font-bold whitespace-nowrap">
-        {record.id}
+        {record.number || record.id}
       </td>
       <td className="py-3.5 px-4">
         <div className="font-medium text-on-surface">{record.name}</div>
@@ -243,7 +205,23 @@ export function ResidentRow({
         {[record.ageLabel, record.gender].filter(Boolean).join(" • ")}
       </td>
       <td className="py-3.5 px-4 whitespace-nowrap">
-        <span className={record.roomClass}>{record.room}</span>
+        <span className={record.roomClass}>
+          {record.accommodation?.room || record.accommodation?.bed || "—"}
+        </span>
+        <div>
+          {record.accommodation?.type ?? "Unallocated"}
+          {record.accommodation?.category
+            ? " · " + record.accommodation.category
+            : ""}
+        </div>
+        {record.accommodation && (
+          <div>{floorLabel(record.accommodation.floor)}</div>
+        )}
+        {record.accommodation?.dormitory && (
+          <div>
+            {record.accommodation.dormitory} · {record.accommodation.bed}
+          </div>
+        )}
       </td>
       <td className="py-3.5 px-4">
         <span className="text-on-surface font-medium block">
@@ -253,11 +231,15 @@ export function ResidentRow({
           {record.categoryDetail}
         </span>
       </td>
+      <td className="py-3.5 px-4 whitespace-nowrap">{record.phone || "—"}</td>
       <td className="py-3.5 px-4">
         <div className="text-on-surface font-medium">{record.contactLabel}</div>
         <div className="text-body-sm text-on-surface-variant tabular-nums">
           {record.contactPhone}
         </div>
+      </td>
+      <td className="py-3.5 px-4 whitespace-nowrap">
+        {record.admitted || "—"}
       </td>
       <td className="py-3.5 px-4">
         <StatusBadge
@@ -272,46 +254,20 @@ export function ResidentRow({
           className="px-3 py-1.5 rounded-md bg-primary-container text-primary font-semibold text-label-sm hover:bg-primary hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-primary whitespace-nowrap"
           onClick={() => open(record)}
         >
+          <span
+            className="material-symbols-outlined text-[18px]"
+            aria-hidden="true"
+          >
+            visibility
+          </span>{" "}
           Profile
         </button>
-      </td>
-    </tr>
-  );
-}
-
-export function StaffResidentRow({
-  record,
-  open,
-}: {
-  record: StaffResident;
-  open: (record: StaffResident) => void;
-}) {
-  return (
-    <tr className="hover:bg-surface-variant/40 transition-colors">
-      <td className="py-3.5 px-4 font-code text-code-md text-primary font-bold whitespace-nowrap">
-        {record.id}
-      </td>
-      <td className="py-3.5 px-4 font-medium text-on-surface">{record.name}</td>
-      <td className={record.staffRoomClass}>{record.room}</td>
-      <td className="py-3.5 px-4 text-on-surface-variant truncate max-w-xs">
-        {record.summary}
-      </td>
-      <td className="py-3.5 px-4 text-on-surface-variant">
-        {[record.contactLabel, record.contactPhone].filter(Boolean).join(" • ")}
-      </td>
-      <td className="py-3.5 px-4 text-right min-w-[130px]">
-        <button
-          data-resident={record.id}
-          className="inline-flex items-center gap-1 text-primary hover:text-tertiary font-semibold text-label-sm focus-visible:ring-2 focus-visible:ring-primary"
-          type="button"
-          onClick={() => open(record)}
-          aria-haspopup="dialog"
-        >
-          <span>Inspect</span>
-          <span className="material-symbols-outlined text-[16px]" aria-hidden>
-            visibility
-          </span>
-        </button>
+        <RecordAction
+          action="edit"
+          label="Edit resident"
+          onClick={() => edit(record)}
+        />
+        <ArchiveResidentAction record={record} />
       </td>
     </tr>
   );

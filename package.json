@@ -15,5 +15,10 @@
     "lint": "npm run lint --workspaces",
     "build": "npm run build --workspaces",
     "db:migrate": "npm run db:migrate --workspace backend --"
+  },
+  "overrides": {
+    "@nestjs/swagger": {
+      "swagger-ui-dist": "5.36.0"
+    }
   }
 }

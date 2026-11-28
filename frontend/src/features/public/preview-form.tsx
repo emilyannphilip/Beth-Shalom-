@@ -3,74 +3,99 @@
 import {
   createContext,
   useContext,
+  useRef,
   useState,
   type ComponentProps,
 } from "react";
+import { errorMessage } from "@/lib/api";
+import { submitEnquiry, type Receipt, type Source } from "./enquiry-api";
 
-const PreviewContext = createContext(false);
-export const previewNotice = "Preview only. Details are not sent or saved.";
+const ResultContext = createContext<Receipt | null>(null);
 
 export function PreviewForm({
   children,
   resetAfterValidation,
   hideAfterValidation,
+  source,
   ...props
 }: Omit<ComponentProps<"form">, "onSubmit" | "onReset"> & {
   resetAfterValidation?: boolean;
   hideAfterValidation?: boolean;
+  source: Source;
 }) {
-  const [validated, setValidated] = useState(false);
-
+  const [receipt, setReceipt] = useState<Receipt | null>(null);
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+  const busy = useRef(false);
   return (
-    <PreviewContext.Provider value={validated}>
+    <ResultContext.Provider value={receipt}>
       <form
         {...props}
         method="dialog"
-        onReset={() => setValidated(false)}
-        onSubmit={(event) => {
+        aria-busy={pending}
+        onReset={() => {
+          setReceipt(null);
+          setError("");
+        }}
+        onSubmit={async (event) => {
           event.preventDefault();
           const form = event.currentTarget;
-          if (!form.reportValidity()) return;
-
-          if (resetAfterValidation) form.reset();
-          setValidated(true);
-          requestAnimationFrame(() => {
-            const message = form.querySelector<HTMLElement>(
-              "[data-preview-feedback]",
+          if (busy.current || !form.reportValidity()) return;
+          busy.current = true;
+          setPending(true);
+          setError("");
+          setReceipt(null);
+          try {
+            const result = await submitEnquiry(form, source);
+            if (resetAfterValidation) form.reset();
+            setReceipt(result);
+          } catch (failure) {
+            setError(errorMessage(failure));
+          } finally {
+            busy.current = false;
+            setPending(false);
+            requestAnimationFrame(() =>
+              form
+                .querySelector<HTMLElement>("[data-enquiry-feedback]")
+                ?.focus(),
             );
-            message?.focus({ preventScroll: true });
-            message?.scrollIntoView({ block: "nearest", behavior: "auto" });
-          });
+          }
         }}
       >
-        {hideAfterValidation && validated ? (
+        {pending && (
+          <p role="status" className="sm:col-span-2">
+            Sending your enquiry…
+          </p>
+        )}
+        {error && (
+          <p
+            role="alert"
+            tabIndex={-1}
+            data-enquiry-feedback
+            className="sm:col-span-2 text-error"
+          >
+            {error}
+          </p>
+        )}
+        {hideAfterValidation && receipt ? (
           <PreviewFeedback
             id="enquiry-confirmation"
-            className="sm:col-span-2 rounded-xl border border-secondary/20 bg-secondary-container/70 p-4 font-body-sm text-on-secondary-container shadow-sm"
-          >
-            Preview complete. No message was sent or saved. For immediate
-            assistance, please call +91 8289838745.
-          </PreviewFeedback>
+            className="sm:col-span-2 rounded-xl border border-secondary/20 bg-secondary-container/70 p-4 text-on-secondary-container"
+          />
         ) : (
-          <>
-            <p className="sm:col-span-2 text-body-sm text-on-surface-variant">
-              {previewNotice}
-            </p>
-            {children}
-          </>
+          children
         )}
       </form>
-    </PreviewContext.Provider>
+    </ResultContext.Provider>
   );
 }
 
-export function PreviewFeedback({ children, ...props }: ComponentProps<"div">) {
-  const validated = useContext(PreviewContext);
-  if (!validated) return null;
-
+export function PreviewFeedback(props: ComponentProps<"div">) {
+  const receipt = useContext(ResultContext);
+  if (!receipt) return null;
   return (
-    <div {...props} tabIndex={-1} role="status" data-preview-feedback>
-      {children ?? "Preview complete. Your details were not sent or saved."}
+    <div {...props} tabIndex={-1} role="status" data-enquiry-feedback>
+      Enquiry received. Reference {receipt.enquiry_number}.
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 import { useSidebar } from "./navigation";
-import { useDemo } from "./demo-session";
+import { usePortal } from "./portal-session";
 import { PortalLogo } from "./portal-logo";
 import { LogoutButton, ProfileButton, PortalLink } from "./navigation";
 export function PortalSidebar({
@@ -9,7 +9,7 @@ export function PortalSidebar({
   screen: "admin" | "staff-management" | "residents" | "staff";
 }) {
   const sidebar = useSidebar();
-  const { session } = useDemo();
+  const { session } = usePortal();
   if (screen === "admin")
     return (
       <aside
@@ -99,14 +99,6 @@ export function PortalSidebar({
               >
                 Enquiry Management
               </span>
-              <span
-                className={
-                  "ml-auto bg-warning-container text-on-warning-container text-label-sm font-bold px-2 py-0.5 rounded-full sidebar-label" +
-                  (sidebar.collapsed ? " hidden" : "")
-                }
-              >
-                12
-              </span>
             </PortalLink>
             <PortalLink
               href="/portal/admin/staff"
@@ -157,14 +149,6 @@ export function PortalSidebar({
               >
                 Admitted Residents
               </span>
-              <span
-                className={
-                  "ml-auto bg-primary-container text-primary text-label-sm font-bold px-2 py-0.5 rounded-full sidebar-label" +
-                  (sidebar.collapsed ? " hidden" : "")
-                }
-              >
-                148
-              </span>
             </PortalLink>
             <ProfileButton
               className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface font-label text-label-md transition-colors"
@@ -184,6 +168,27 @@ export function PortalSidebar({
                 Profile &amp; Security
               </span>
             </ProfileButton>
+            <PortalLink
+              href="/portal/admin/rooms"
+              sidebar
+              aria-label="Room Management"
+              close={sidebar.dismiss}
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant font-label text-label-md"
+            >
+              <span
+                className="material-symbols-outlined text-[20px]"
+                aria-hidden="true"
+              >
+                meeting_room
+              </span>
+              <span
+                className={
+                  "sidebar-label" + (sidebar.collapsed ? " hidden" : "")
+                }
+              >
+                Room Management
+              </span>
+            </PortalLink>
           </nav>
         </div>
         <div className="p-3 border-t border-outline-variant space-y-2">
@@ -309,14 +314,6 @@ export function PortalSidebar({
               >
                 Enquiry Management
               </span>
-              <span
-                className={
-                  "ml-auto bg-warning-container text-on-warning-container text-label-sm font-bold px-2 py-0.5 rounded-full sidebar-label" +
-                  (sidebar.collapsed ? " hidden" : "")
-                }
-              >
-                12
-              </span>
             </PortalLink>
             <PortalLink
               href="/portal/admin/staff"
@@ -367,14 +364,6 @@ export function PortalSidebar({
               >
                 Admitted Residents
               </span>
-              <span
-                className={
-                  "ml-auto bg-primary-container text-primary text-label-sm font-bold px-2 py-0.5 rounded-full sidebar-label" +
-                  (sidebar.collapsed ? " hidden" : "")
-                }
-              >
-                148
-              </span>
             </PortalLink>
             <ProfileButton
               className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface font-label text-label-md transition-colors"
@@ -394,6 +383,27 @@ export function PortalSidebar({
                 Profile &amp; Security
               </span>
             </ProfileButton>
+            <PortalLink
+              href="/portal/admin/rooms"
+              sidebar
+              aria-label="Room Management"
+              close={sidebar.dismiss}
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant font-label text-label-md"
+            >
+              <span
+                className="material-symbols-outlined text-[20px]"
+                aria-hidden="true"
+              >
+                meeting_room
+              </span>
+              <span
+                className={
+                  "sidebar-label" + (sidebar.collapsed ? " hidden" : "")
+                }
+              >
+                Room Management
+              </span>
+            </PortalLink>
           </nav>
         </div>
         <div className="p-3 border-t border-outline-variant space-y-2">
@@ -519,14 +529,6 @@ export function PortalSidebar({
               >
                 Enquiry Management
               </span>
-              <span
-                className={
-                  "ml-auto bg-warning-container text-on-warning-container text-label-sm font-bold px-2 py-0.5 rounded-full sidebar-label" +
-                  (sidebar.collapsed ? " hidden" : "")
-                }
-              >
-                12
-              </span>
             </PortalLink>
             <PortalLink
               href="/portal/admin/staff"
@@ -569,14 +571,6 @@ export function PortalSidebar({
               >
                 Admitted Residents
               </span>
-              <span
-                className={
-                  "ml-auto bg-primary text-white text-label-sm font-bold px-2 py-0.5 rounded-full sidebar-label" +
-                  (sidebar.collapsed ? " hidden" : "")
-                }
-              >
-                148
-              </span>
             </PortalLink>
             <ProfileButton
               className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface font-label text-label-md transition-colors"
@@ -596,6 +590,27 @@ export function PortalSidebar({
                 Profile &amp; Security
               </span>
             </ProfileButton>
+            <PortalLink
+              href="/portal/admin/rooms"
+              sidebar
+              aria-label="Room Management"
+              close={sidebar.dismiss}
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant font-label text-label-md"
+            >
+              <span
+                className="material-symbols-outlined text-[20px]"
+                aria-hidden="true"
+              >
+                meeting_room
+              </span>
+              <span
+                className={
+                  "sidebar-label" + (sidebar.collapsed ? " hidden" : "")
+                }
+              >
+                Room Management
+              </span>
+            </PortalLink>
           </nav>
         </div>
         <div className="p-3 border-t border-outline-variant space-y-2">
@@ -721,17 +736,9 @@ export function PortalSidebar({
               >
                 Enquiry Management
               </span>
-              <span
-                className={
-                  "ml-auto bg-warning-container text-on-warning-container text-label-sm font-bold px-2 py-0.5 rounded-full sidebar-label" +
-                  (sidebar.collapsed ? " hidden" : "")
-                }
-              >
-                12
-              </span>
             </PortalLink>
             <PortalLink
-              href="/portal/staff#staff-residents-section"
+              href="/portal/staff/residents"
               className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface font-label text-label-md transition-colors"
               sidebar
               close={sidebar.dismiss}
@@ -750,18 +757,10 @@ export function PortalSidebar({
               >
                 Admitted Residents
               </span>
-              <span
-                className={
-                  "ml-auto bg-primary-container text-primary text-label-sm font-bold px-2 py-0.5 rounded-full sidebar-label" +
-                  (sidebar.collapsed ? " hidden" : "")
-                }
-              >
-                148
-              </span>
             </PortalLink>
             <ProfileButton
               className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface font-label text-label-md transition-colors"
-              aria-label="My Profile &amp; Rota"
+              aria-label="My Profile"
             >
               <span
                 className="material-symbols-outlined text-[20px]"
@@ -774,9 +773,30 @@ export function PortalSidebar({
                   "sidebar-label" + (sidebar.collapsed ? " hidden" : "")
                 }
               >
-                My Profile &amp; Rota
+                My Profile
               </span>
             </ProfileButton>
+            <PortalLink
+              href="/portal/staff/rooms"
+              sidebar
+              aria-label="Room Management"
+              close={sidebar.dismiss}
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-variant font-label text-label-md"
+            >
+              <span
+                className="material-symbols-outlined text-[20px]"
+                aria-hidden="true"
+              >
+                meeting_room
+              </span>
+              <span
+                className={
+                  "sidebar-label" + (sidebar.collapsed ? " hidden" : "")
+                }
+              >
+                Room Management
+              </span>
+            </PortalLink>
           </nav>
         </div>
         <div className="p-3 border-t border-outline-variant space-y-2">
@@ -794,7 +814,7 @@ export function PortalSidebar({
                 {session?.name}
               </p>
               <span className="text-label-sm text-outline block truncate">
-                Care Staff • Day Shift
+                Care Staff
               </span>
             </div>
             <LogoutButton

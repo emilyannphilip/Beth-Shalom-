@@ -27,18 +27,18 @@ function AdmissionIntro() {
             Admissions
           </span>{" "}
           <span className="opacity-40">/</span>{" "}
-          <span className="text-primary font-bold">Admission Inquiry Form</span>
+          <span className="text-primary font-bold">Admission Enquiry Form</span>
         </nav>
         <div className="max-w-3xl flex flex-col gap-space-xs mt-2">
           <span className="font-label-md text-label-md uppercase tracking-wider text-secondary font-bold">
             Confidential &amp; Compassionate
           </span>
           <h1 className="font-headline-xl text-headline-xl text-primary tracking-tight font-bold">
-            Admission &amp; Care Inquiry
+            Admission &amp; Care Enquiry
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
             Take the first step toward secure, peaceful, and dignified living
-            for your loved ones. Our admissions committee reviews inquiries with
+            for your loved ones. Our admissions committee reviews enquiries with
             gentle attentiveness, medical sensitivity, and utmost
             confidentiality.
           </p>
@@ -94,7 +94,7 @@ function AdmissionIntro() {
                 Worldwide Assistance
               </span>{" "}
               <span className="font-body-sm text-body-sm text-on-surface-variant">
-                Domestic &amp; NRI inquiries welcomed
+                Domestic &amp; NRI enquiries welcomed
               </span>
             </div>
           </div>
@@ -113,7 +113,7 @@ function AdmissionApplication() {
             <div className="flex items-center justify-between pb-space-sm border-b border-surface-container-high">
               <div>
                 <h2 className="font-headline-md text-headline-md text-primary">
-                  Inquiry Application
+                  Enquiry Application
                 </h2>
                 <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">
                   Fields indicated with{" "}
@@ -128,7 +128,11 @@ function AdmissionApplication() {
                 edit_note
               </span>
             </div>
-            <PreviewForm className="flex flex-col gap-6" id="admissionForm">
+            <PreviewForm
+              className="flex flex-col gap-6"
+              id="admissionForm"
+              source="ADMISSION_ENQUIRY"
+            >
               <div className="flex flex-col gap-2">
                 <label
                   className="font-label-md text-label-md text-on-surface flex items-center justify-between"
@@ -207,6 +211,7 @@ function AdmissionApplication() {
                     defaultChecked
                     className="w-5 h-5 rounded text-secondary focus:ring-secondary accent-secondary"
                     id="whatsappAvailable"
+                    name="whatsappAvailable"
                     type="checkbox"
                   />
                   <span className="font-body-sm text-body-sm text-on-surface flex items-center gap-1.5">
@@ -478,7 +483,7 @@ function AdmissionApplication() {
                   >
                     lock
                   </span>{" "}
-                  Submit Admission Inquiry
+                  Submit Admission Enquiry
                 </button>
                 <button
                   className="w-full sm:w-auto inline-flex items-center justify-center min-h-[52px] px-6 py-3 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-md text-label-md transition-colors"
@@ -605,7 +610,7 @@ function AdmissionApplication() {
               </a>{" "}
               <a
                 className="flex items-center justify-center gap-2 p-3.5 rounded-xl bg-secondary text-on-secondary hover:bg-secondary/90 transition-all font-label-md text-label-md font-bold shadow-sm"
-                href="https://wa.me/918289838745?text=Hello%20Beth%20Shalom,%20I%20would%20like%20to%20inquire%20about%20senior%20living%20admission."
+                href="https://wa.me/918289838745?text=Hello%20Beth%20Shalom,%20I%20would%20like%20to%20enquire%20about%20senior%20living%20admission."
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -643,7 +648,7 @@ function AdmissionApplication() {
                 </div>
                 <div className="flex flex-col">
                   <span className="font-label-md text-label-md text-primary font-bold">
-                    Inquiry &amp; Tele-Discussion (24h)
+                    Enquiry &amp; Tele-Discussion (24h)
                   </span>{" "}
                   <span className="font-body-sm text-body-sm text-on-surface-variant">
                     Our admissions officer reviews medical needs, room
@@ -739,7 +744,7 @@ function AdmissionFaq() {
       <div className="max-w-4xl mx-auto flex flex-col gap-space-lg">
         <div className="text-center flex flex-col gap-2">
           <span className="font-label-md text-label-md uppercase tracking-wider text-secondary font-bold">
-            Common Inquiries
+            Common Enquiries
           </span>
           <h2 className="font-headline-lg text-headline-lg text-primary">
             Frequently Asked Questions
@@ -919,7 +924,7 @@ function AdmissionFaq() {
 }
 export function AdmissionContent() {
   return (
-    <main className="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]">
+    <main className="w-full bg-surface">
       <div className="flex flex-col w-full">
         <AdmissionIntro />
         <AdmissionApplication />

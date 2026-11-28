@@ -35,25 +35,35 @@ export const residentStatuses = [
   "Discharged",
 ] as const;
 
-export type DemoRole = "admin" | "staff";
-export type EnquiryCategory = (typeof enquiryCategories)[number];
+export type PortalRole = "admin" | "staff";
 export type EnquiryStatus = (typeof enquiryStatuses)[number];
 export type StaffDesignation = (typeof staffDesignations)[number];
 export type ResidentCategory = (typeof residentCategories)[number];
 export type ResidentStatus = (typeof residentStatuses)[number];
 
-export interface DemoSession {
-  role: DemoRole;
+export interface PortalSession {
+  id: string;
+  role: PortalRole;
   name: string;
 }
 
 export interface Enquiry {
+  number?: string;
+  categoryId?: string;
+  version?: number;
+  source?: string;
+  originalTopic?: string;
+  childAge?: number;
+  supportRequirements?: string;
+  assignedId?: string;
+  visitId?: string;
+  archived?: boolean;
   id: string;
   name: string;
   relationship: string;
   phone: string;
   email: string;
-  category: EnquiryCategory;
+  category: string;
   date: string;
   visit: string;
   status: EnquiryStatus;
@@ -69,7 +79,7 @@ export interface Enquiry {
     badgeDot: string;
   };
   audit?: ReadonlyArray<{
-    role: DemoRole;
+    role: PortalRole;
     time: string;
     status: EnquiryStatus;
     remarks: string;
@@ -77,6 +87,9 @@ export interface Enquiry {
 }
 
 export interface StaffAccount {
+  number?: string;
+  roleId?: string;
+  archived?: boolean;
   id: string;
   name: string;
   username: string;
@@ -85,20 +98,50 @@ export interface StaffAccount {
   designation: StaffDesignation;
   status: "Active" | "Inactive";
   avatarClass: string;
-  demoPassword?: string;
 }
 
+export const medicalFields = {
+  medical_conditions: "Medical conditions",
+  allergies: "Allergies",
+  dietary_requirements: "Dietary requirements",
+  mobility_requirements: "Mobility requirements",
+  special_instructions: "Special instructions",
+};
+
+export const contactFields = {
+  relationship: "relationship",
+  email: "email",
+  address: "address",
+};
+
 export interface Resident {
+  email?: string;
+  medical?: Record<string, string>;
+  emergencyDetails?: Record<string, string>;
+  guardianDetails?: Record<string, string>;
+  number?: string;
+  history?: { action: string; date: string; target?: string }[];
+  archived?: boolean;
+  accommodation?: {
+    type: "Room" | "Dormitory";
+    category: string;
+    categoryId: string;
+    room: string;
+    dormitory: string;
+    bed: string;
+    floor?: number | null;
+  };
   id: string;
   name: string;
   dob: string;
   ageLabel: string;
   gender: string;
   admitted: string;
+  phone?: string;
+  expectedDischarge?: string;
+  discharged?: string;
   room: string;
   roomClass: string;
-  staffRoomClass?: string;
-  staffSummary?: string;
   category: ResidentCategory;
   categoryDetail: string;
   address: string;
@@ -113,19 +156,6 @@ export interface Resident {
   badgeDot: string;
 }
 
-export type StaffResident = Pick<
-  Resident,
-  | "id"
-  | "name"
-  | "room"
-  | "staffRoomClass"
-  | "category"
-  | "status"
-  | "care"
-  | "contactLabel"
-  | "contactPhone"
-> & { summary: string };
-
-export function dashboardRoute(role: DemoRole) {
+export function dashboardRoute(role: PortalRole) {
   return role === "admin" ? "/portal/admin" : "/portal/staff";
 }

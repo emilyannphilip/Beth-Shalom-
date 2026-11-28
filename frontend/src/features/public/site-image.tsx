@@ -17,6 +17,8 @@ export function SiteImage({
   alt,
   width,
   height,
+  loading = "lazy",
+  decoding = "async",
   ...props
 }: SiteImageProps) {
   if (width && height) {
@@ -27,12 +29,16 @@ export function SiteImage({
         width={width}
         height={height}
         unoptimized={src.startsWith("https://")}
+        loading={loading}
+        decoding={decoding}
         {...props}
       />
     );
   }
 
   // These source images are sized by their surrounding CSS. Keep their intrinsic sizing.
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt={alt} {...props} />;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={alt} loading={loading} decoding={decoding} {...props} />
+  );
 }

@@ -4,11 +4,17 @@ import { PortalFrame } from "../portal-frame";
 import { PortalDialog } from "../portal-dialog";
 import { PortalLink } from "../navigation";
 import { useLogin } from "../auth-interactions";
-import { DemoRoute } from "../demo-session";
-export function PortalLogin() {
+import { PortalRoute } from "../portal-session";
+export function PortalLogin({
+  expired = false,
+  passwordChanged = false,
+}: {
+  expired?: boolean;
+  passwordChanged?: boolean;
+}) {
   const ui = useLogin();
   return (
-    <DemoRoute role="guest">
+    <PortalRoute role="guest">
       <PortalFrame auth>
         <header className="portal-auth-header w-full border-b flex items-center justify-between">
           <div className="portal-auth-brand">
@@ -43,33 +49,19 @@ export function PortalLogin() {
                 Staff &amp; Admin Portal
               </h1>
               <p className="text-body-sm text-on-surface-variant mt-1.5">
-                Demo access only • Sign in with the sample credentials for your
-                designated portal
+                Sign in with your Beth Shalom portal account.
               </p>
             </div>
-            <div className="portal-auth-panel mb-6 p-3 border rounded-xl flex items-center justify-between text-body-sm">
-              <span className="text-label-sm font-label text-on-surface-variant">
-                Demo Quick-Fill:
-              </span>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  id="fill-admin-btn"
-                  className="px-2.5 py-1 text-label-sm font-semibold rounded bg-white text-primary border border-outline-variant hover:bg-primary hover:text-white transition-colors"
-                  onClick={() => ui.fill("admin")}
-                >
-                  Admin
-                </button>
-                <button
-                  type="button"
-                  id="fill-staff-btn"
-                  className="px-2.5 py-1 text-label-sm font-semibold rounded bg-white text-secondary border border-outline-variant hover:bg-secondary hover:text-white transition-colors"
-                  onClick={() => ui.fill("staff")}
-                >
-                  Staff
-                </button>
-              </div>
-            </div>
+            {expired && (
+              <p role="status" className="portal-reset-message">
+                Your session has expired. Sign in to continue.
+              </p>
+            )}
+            {passwordChanged && (
+              <p role="status" className="portal-reset-message">
+                Password updated. Sign in with your new password.
+              </p>
+            )}
             <form
               id="portal-login-form"
               className="space-y-5"
@@ -122,13 +114,14 @@ export function PortalLogin() {
                     id="username-input"
                     type="text"
                     required
-                    placeholder="e.g. admin.bethshalom or staff.karen"
+                    placeholder="Username"
                     className="w-full pl-10 pr-4 py-2.5 text-body-md bg-surface/50 border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:bg-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
                     value={ui.username}
                     onChange={(event) =>
                       ui.setUsername(event.currentTarget.value)
                     }
                     name="username"
+                    autoComplete="username"
                   />
                 </div>
               </div>
@@ -166,6 +159,7 @@ export function PortalLogin() {
                       ui.setPassword(event.currentTarget.value)
                     }
                     name="password"
+                    autoComplete="current-password"
                   />
                   <button
                     type="button"
@@ -190,13 +184,14 @@ export function PortalLogin() {
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-success"></span>
                   <span className="text-body-sm text-outline">
-                    Local Demo Session Only
+                    Authorized portal accounts
                   </span>
                 </div>
               </div>
               <button
                 type="submit"
                 id="login-submit-btn"
+                disabled={ui.pending}
                 className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-primary text-on-primary rounded-lg font-label text-label-lg shadow-sm hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-state-change"
               >
                 <span
@@ -217,9 +212,7 @@ export function PortalLogin() {
             </p>
             <div className="portal-auth-note mt-8 pt-6 border-t border-outline-variant/60 text-center">
               <p className="text-body-sm text-outline">
-                Demo for healthcare &amp; management workflows.
-                <br />
-                Use sample accounts and records only.
+                Sign out when using a shared device.
               </p>
             </div>
           </div>
@@ -266,8 +259,8 @@ export function PortalLogin() {
               </div>
               <div className="py-4 space-y-3">
                 <p className="text-body-md text-on-surface-variant">
-                  Enter a sample staff email to preview recovery. This demo does
-                  not send a verification link.
+                  Enter the email address registered to your portal account to
+                  request a password reset link.
                 </p>
                 <label className="block">
                   <span className="text-label-md font-label text-on-surface mb-1 block">
@@ -278,10 +271,16 @@ export function PortalLogin() {
                     placeholder="staff.name@bethshalom.org"
                     className="w-full px-3 py-2 text-body-sm border border-outline-variant rounded-md text-on-surface focus:ring-1 focus:ring-primary focus:outline-none"
                     required
-                    id="demo-reset-email"
+                    id="reset-email"
+                    name="email"
                     aria-label="Institutional email"
                   />
                 </label>
+                {ui.resetError && (
+                  <p role="alert" className="text-error">
+                    {ui.resetError}
+                  </p>
+                )}
                 <p className="text-body-sm text-outline">
                   Need immediate assistance? Contact Administration Desk at{" "}
                   <span className="font-semibold text-primary">ext. 4010</span>.
@@ -297,19 +296,19 @@ export function PortalLogin() {
                 </button>
                 <button
                   type="submit"
+                  disabled={ui.resetPending}
                   className="px-4 py-2 bg-primary text-on-primary rounded-md text-label-md font-label hover:bg-tertiary"
                 >
-                  Send Reset Instructions
+                  {ui.resetPending ? "Sending…" : "Send Reset Instructions"}
                 </button>
               </div>
             </div>
           </form>
         </PortalDialog>
         <footer className="portal-auth-footer py-4 text-center text-body-sm text-outline border-t">
-          Beth Shalom Retirement Home • Demo Portal Module • Botanical Pastel
-          Theme
+          Beth Shalom Retirement Home • Staff &amp; Admin Portal
         </footer>
       </PortalFrame>
-    </DemoRoute>
+    </PortalRoute>
   );
 }

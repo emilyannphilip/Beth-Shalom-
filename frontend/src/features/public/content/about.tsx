@@ -4,7 +4,10 @@ function HeritageNavigation() {
   return (
     <section className="w-full bg-surface-container-low py-4 px-margin-mobile md:px-margin">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3 text-on-surface-variant font-label-md text-label-md">
-        <div className="flex items-center gap-2 text-on-surface-variant">
+        <nav
+          aria-label="Breadcrumb"
+          className="flex flex-wrap items-center gap-2 text-on-surface-variant"
+        >
           <Link
             className="hover:text-primary transition-colors flex items-center gap-1"
             data-path="home"
@@ -19,9 +22,11 @@ function HeritageNavigation() {
             </span>{" "}
             Home
           </Link>{" "}
-          <span className="text-outline-variant">/</span>{" "}
-          <span className="text-primary font-bold">About &amp; Heritage</span>
-        </div>
+          <span className="text-outline-variant" aria-hidden="true">/</span>{" "}
+          <span className="text-primary font-bold" aria-current="page">
+            About Us
+          </span>
+        </nav>
         <nav
           aria-label="Heritage In-page Jump Navigation"
           className="flex flex-wrap items-center gap-2 text-label-sm font-label-sm"
@@ -152,7 +157,7 @@ function AboutHero() {
             <SiteImage
               className="w-full h-full object-cover"
               data-alt="Stunning aerial view of Beth Shalom multi-storey retirement retreat nestled into the lush tropical green hills and coconut groves of Elakodinji Pampady Kerala in warm afternoon sunlight, showcasing peaceful architecture and natural Kerala mountain flora."
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBk4-SBsG8sWl7dDtc3bdSf93yGJ5TZV_nSUDdwt-GVJS_Zl_PAkvE5rJvQn8jQ_5yw9_JNVe8skxVQeljZyjdAUBqj6RrCJsGBsYjOBsoMYGnElzmcqWFK2_5ljOsnjSYTb0sJ-sl653r5D2BmoEPXbE0T2JQTl3v5frMNkaMTbQx5tixKjL7xWJNlBtLGST3Ia4ehLJ_baoKn81YqGZ60h3AyYcSIRTC0XsJdqg"
+              src="/beth-shalom/assets/design/about-163ae172280f.webp"
               alt=""
             />
             <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent flex flex-col justify-end p-space-lg text-on-primary">
@@ -212,7 +217,7 @@ function SacredHeritage() {
               <SiteImage
                 className="w-full h-full object-cover"
                 data-alt="Serene historical monastery setting of Mar Kuriakose Dayara Pothenpuram Pampady surrounded by tall teak trees and tropical gardens, showing classic Kerala Christian chapel arches and a peaceful prayer environment in soft morning light."
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCI7SmFNb1__QA_LNPYea6-ez9jgNvLkl0qGQCr3gY_MaNtvDQtYyZ9oq7uAiH5nG6TTKL_qIKKOk3Ap0OPKkujfey7BSlWbgjrnRn0DLiPGNTxbfwZWA_6erB26TsEBmfueGzsNbbVwgJoLBAUyqiHwkYgkkeCfoSvt6nwAleV7YFj_aECdEmbkjv41Mg4LrHcC1byNR0UOE_WwyTYouOc5S01pNU7TIZ6ixpBkA"
+                src="/beth-shalom/assets/design/about-5e85214c1b8b.webp"
                 alt=""
               />
               <div className="absolute bottom-3 left-3 bg-surface-container-lowest/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-on-surface font-label-sm text-label-sm">
@@ -827,7 +832,7 @@ function HilltopCampus() {
               <SiteImage
                 className="w-full h-full object-cover"
                 data-alt="Detailed architectural front elevation of Beth Shalom retirement home in Elakodinji Pampady Kerala with red brick facade, green gabled roofs, wide balconies, and manicured green hedges under clear blue sky."
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTYg6dbvtz4zJtpQHeSkGxIW25sZgjK6lymgQYaNXwQOS_ebxUjZ5SxJzfArwdB0FoaBD0rnLOHTDSaV1x-ozM8cJMDSMXSLfmm3p2jfBEU9_cFaknqB-QK5zkK4V4JXoUqzbresi0iFlowl0iR_1CN7EHqWXEbbvKrKaerKOMU5X2OzYQdo5WSX87_DJM30yC7suyFQTyI5q27UCW_srRp-Q8a_nAOETt7qEBtQ"
+                src="/beth-shalom/assets/design/about-4ed439290e96.webp"
                 alt=""
               />
             </div>
@@ -835,7 +840,7 @@ function HilltopCampus() {
               <SiteImage
                 className="w-full h-full object-cover"
                 data-alt="Interior architectural floorplan visualization showing accessible senior living suite with bedroom, spacious bathroom with safety grab rails, kitchenette, and open sun balcony."
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIVEc7M-1phPBugvFS5QqVEckPfExONCkrSN0ndgTKjkgIfddjP4N--uUKlUkW-2jT6E5A2RZ_YQER3Won-LKnjc0dz3IuvkUgxmPBwiiP3nLYyUuQ634C9JcYFsqIrgh4Ao1sUJIJbgn6KGYoqRDiqYNnzm8nCC_OmTZv-i7BXMTSAOkNUaCHVzApMSRvdEzE6VprXJCTSsWQOKzyiNbiS0ti82aR-ubLmiHRZQ"
+                src="/beth-shalom/assets/design/about-41677925e868.webp"
                 alt=""
               />
             </div>
@@ -843,7 +848,7 @@ function HilltopCampus() {
               <SiteImage
                 className="w-full h-full object-cover"
                 data-alt="Lush panoramic aerial vista of the mountain landscape of Elakodinji Kottayam Kerala with mist over tea plantations, coconut palms, and peaceful church spires in the distance."
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD7dSuTrvTHhpGMDKQkIFZ-VkerlQ8UAXbB6JRk6sPP87mYMTQVXhfsiJcpg_sWAI5RO_XHWlMjC0ZddGCeTrSytRrX0ZI84lCHNIDnTHbls61rWb44NidkcMllSpAiiY5L8gjNd803lkw4fdX7IDaAZ_wrEs2hWiakg9EZ6Kvq9bM-9TMj_jiFe2sAdboYz0hNHUBSFf7fQFPHHkNUBMgUCdC-7_McqYpChymbw"
+                src="/beth-shalom/assets/design/about-10fae210081d.webp"
                 alt=""
               />
               <div className="absolute bottom-3 left-3 bg-primary/80 backdrop-blur-sm text-on-primary px-3 py-1 rounded-md font-label-sm text-label-sm">
@@ -1111,7 +1116,7 @@ function Custodianship() {
 }
 export function AboutContent() {
   return (
-    <main className="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]">
+    <main className="w-full bg-surface">
       <div className="flex flex-col w-full">
         <HeritageNavigation />
         <AboutHero />

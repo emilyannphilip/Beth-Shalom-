@@ -1,4 +1,7 @@
 "use client";
+import { fieldClass } from "../management-ui";
+import { PortalDataStatus } from "../portal-session";
+import { RecordFeedback } from "../record-actions";
 import {
   PortalTable,
   TableRows,
@@ -6,7 +9,7 @@ import {
   GridSearch,
   GridSelect,
 } from "../grid";
-import { PortalFrame, DemoNotice } from "../portal-frame";
+import { PortalFrame } from "../portal-frame";
 import { PortalDialog, ConfirmDialog } from "../portal-dialog";
 import { LogoutButton } from "../navigation";
 import { StaffAccountRow } from "../table-rows";
@@ -25,7 +28,7 @@ export function StaffManagement() {
             <h1 className="font-headline text-headline-sm text-on-surface">
               Staff Directory &amp; RBAC Management
             </h1>
-            <DemoNotice />
+            <RecordFeedback />
             <p className="text-body-sm text-on-surface-variant">
               Admin Privilege • Create Accounts, Manage Designations, Reset
               Passwords &amp; Toggles
@@ -43,7 +46,7 @@ export function StaffManagement() {
               >
                 person_add
               </span>
-              <span>Create New Staff Account</span>
+              <span>+ Add Staff Account</span>
             </button>
             <div className="h-8 w-px bg-outline-variant mx-1"></div>
             <LogoutButton
@@ -77,10 +80,10 @@ export function StaffManagement() {
                 </span>
               </div>
               <div className="font-headline text-headline-md text-on-surface mt-1 tabular-nums">
-                34
+                {ui.counts.total}
               </div>
               <span className="text-body-sm text-success font-medium">
-                100% RBAC verified
+                Sample accounts
               </span>
             </DashboardCard>
             <DashboardCard className="bg-white border border-outline-variant rounded-xl p-4 shadow-sm">
@@ -96,7 +99,7 @@ export function StaffManagement() {
                 </span>
               </div>
               <div className="font-headline text-headline-md text-success mt-1 tabular-nums">
-                32
+                {ui.counts.active}
               </div>
               <span className="text-body-sm text-on-surface-variant">
                 Immediate operational access
@@ -115,7 +118,7 @@ export function StaffManagement() {
                 </span>
               </div>
               <div className="font-headline text-headline-md text-warning mt-1 tabular-nums">
-                2
+                {ui.counts.inactive}
               </div>
               <span className="text-body-sm text-on-surface-variant">
                 On medical leave or re-vetting
@@ -134,7 +137,7 @@ export function StaffManagement() {
                 </span>
               </div>
               <div className="font-headline text-headline-md text-secondary mt-1 tabular-nums">
-                3
+                {ui.counts.admins}
               </div>
               <span className="text-body-sm text-on-surface-variant">
                 Executive directors only
@@ -165,7 +168,7 @@ export function StaffManagement() {
                     >
                       add
                     </span>
-                    <span>Add Staff Member</span>
+                    <span>+ Add</span>
                   </button>
                 </div>
               </div>
@@ -228,7 +231,31 @@ export function StaffManagement() {
                 </div>
               </div>
             </div>
-            <div className="overflow-x-auto">
+            <div className="px-4 pb-3">
+              <label>
+                Sort staff
+                <select
+                  className={fieldClass}
+                  value={grid.sort}
+                  onChange={(e) => grid.setSort(e.currentTarget.value)}
+                >
+                  <option value="newest">Default order</option>
+                  <option value="az">Name A–Z</option>
+                  <option value="za">Name Z–A</option>
+                </select>
+              </label>
+            </div>
+            <div
+              className="overflow-x-auto"
+              role="region"
+              aria-label="Staff accounts table"
+              tabIndex={0}
+            >
+              <PortalDataStatus
+                loading={grid.loading}
+                error={grid.error}
+                retry={grid.retry}
+              />
               <PortalTable className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-surface-variant/70 text-on-surface-variant border-b border-outline-variant font-label text-label-md">
@@ -289,7 +316,7 @@ export function StaffManagement() {
                 </span>{" "}
                 of{" "}
                 <span className="font-semibold text-on-surface">
-                  {grid.matched.length}
+                  {grid.total}
                 </span>{" "}
                 registered staff accounts
               </div>
@@ -514,10 +541,15 @@ export function StaffManagement() {
                 encrypted
               </span>
               <span>
-                Use a sample password only. Demo changes stay in memory until
-                this portal tab refreshes.
+                Choose a password of at least 12
+                characters.
               </span>
             </div>
+            {ui.error && (
+              <p role="alert" className="text-error">
+                {ui.error}
+              </p>
+            )}
             <div className="pt-4 border-t border-outline-variant flex items-center justify-end gap-3">
               <button
                 type="button"
@@ -528,9 +560,14 @@ export function StaffManagement() {
               </button>
               <button
                 type="submit"
+                disabled={ui.pending}
                 className="px-5 py-2 bg-primary text-on-primary rounded-md text-label-md font-label hover:bg-tertiary shadow-sm focus-visible:ring-2 focus-visible:ring-primary"
               >
-                Save Staff Account
+                {ui.pending
+                  ? "Saving…"
+                  : ui.editing
+                    ? "Update Staff Account"
+                    : "Save Staff Account"}
               </button>
             </div>
           </form>
@@ -540,21 +577,23 @@ export function StaffManagement() {
         title={
           ui.confirmation
             ? ui.confirmation.action === "toggle"
-              ? "Change Demo Account Status"
-              : "Reset Demo Password"
+              ? "Change Account Status"
+              : "Send Password Reset"
             : null
         }
         message={
           ui.confirmation
             ? ui.confirmation.action === "toggle"
-              ? "Change the sample account status for " +
+              ? "Change the account status for " +
                 ui.confirmation.account.name +
                 "?"
-              : "Simulate a reset for " +
+              : "Send a reset link to the registered email for " +
                 ui.confirmation.account.name +
-                "? No email will be sent."
+                "?"
             : undefined
         }
+        error={ui.error}
+        pending={ui.pending}
         dismiss={ui.cancelConfirmation}
         accept={ui.confirm}
       />

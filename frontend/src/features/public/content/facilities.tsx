@@ -502,7 +502,7 @@ function SpiritualAndCommunityLife() {
               <SiteImage
                 className="w-full h-full object-cover"
                 data-alt="A sunlit, serene Christian liturgical prayer chapel and sanctuary room inside a Kerala retirement residence with polished teak wooden altar, quiet prayer pews, stained glass accents casting soft warm rays, clean minimalist aesthetic, high-contrast tranquil sacred space."
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv3W-dx_JavqHQfH39r_3mjTfy7PGXFFw_SyG4ndznUi37t2EuDiKdPl_gpojq8W2R5iOGPhTgWmBYWri4mH66c-ort083amrKzTdq2z-_eTtDga_CBK85l5cS-gBhNdWirOVNemrXAQmjDFsyBXvdwmY7BkiTD9MI24cnbybVJHOl5tdBIWll1RQe316A8PBksSoFLayq1EoiR3nptquypTP_AcwSeUAtwK7glw"
+                src="/beth-shalom/assets/design/facilities-7a32dc60efd8.webp"
                 alt=""
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent"></div>
@@ -558,7 +558,7 @@ function SpiritualAndCommunityLife() {
               <SiteImage
                 className="w-full h-full object-cover"
                 data-alt="Sun-drenched architectural interior central atrium of an Indian senior living facility in Kerala with indoor tropical palm trees, ferns, comfortable teak wood lounge chairs, open skylight casting natural light onto limestone floors, senior citizens relaxing peacefully."
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTTzSfjpKaJ4rWrb1cSePOQhOR-qFpWYKUi8xtE9tLc3VF9l8hY6RXBC3et_Q3cm64kFQAgdDE_GAPBmDMoF-opZ_U_roFs4yGUTdrxwoS6_TDg2RHZ19yIyOkI4pr5ixtp6TT103EeCZ-gcwu1hGw__L0pR4HYmmgG_hIB6T6tqMasWudAijc0-K8gSdrCJ12u38rwB_RePEEJWtj6sCtE8feuddzBgdjCdeGow"
+                src="/beth-shalom/assets/design/facilities-373991e1df30.webp"
                 alt=""
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent"></div>
@@ -691,7 +691,7 @@ function NatureAndFarming() {
               <SiteImage
                 className="w-full h-full object-cover"
                 data-alt="Panoramic breathtaking aerial perspective of Beth Shalom retirement home in Elakodinji, Pampady, Kerala, surrounded by lush green rubber plantations, tropical palm trees, rolling mist-clad hills, pristine nature, architectural harmony in rustic earth tones under soft golden daylight."
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0Y3ra52r144O53jslBywUiRjUTBHv4uvgGH-WMiad5pWtkAtBJL865o8Zlu4PFxxETsUREhal0ruMyxEsPUhvMEjJw3Cj9Ldo23Gqct9GPqq9E4CFUzbQKHZ9mAtWJuEMNn7aoxJh5bjG18naGkPbTQnGDjtL6Mni76_uwB2N27gRjvHGCvr9GEgH6R4TJJfpcJoSawVaC2II4W1lCqYGB7HPC2p-4eXyvHRCVQ"
+                src="/beth-shalom/assets/design/facilities-b47ea28a844b.webp"
                 alt=""
               />
             </div>
@@ -961,7 +961,7 @@ function FacilityMatrix() {
                   Total Inventory
                 </th>
                 <th className="py-4 px-space-md text-right" scope="col">
-                  Inquiry
+                  Enquiry
                 </th>
               </tr>
             </thead>
@@ -1278,7 +1278,7 @@ function FacilityFloorPlan() {
           <SiteImage
             className="w-full h-80 object-cover"
             data-alt="Clear top-down architectural layout and interior furniture schematic plan of a luxury geriatric suite in Beth Shalom retirement home showing master bedroom, barrier free washroom with safety grab handles, kitchenette, wide balcony with planters and wheelchair turning radius."
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz_1QEQG4Bdg3KDFAwMbvo9E2Yliq7c_eLZUYPq0j1Fonfx8zPyB9E7_O1WlNtO19_j_aCUSEN0EklY4AT4WS3YNRk8aN2gn-bLb2HfIoMcjgDCkxw0S_BJnKO7ou9Y3Rujr7TwgZpdamHncwg88ImZKRhw0vuObSoKb9IEMM4WdS9xBhRXf5H6sCqO_i-oG1OVIpMgV5YnPqJ56GytUfAB77g1xRqarJdN707fQ"
+            src="/beth-shalom/assets/design/facilities-a4046f1c20aa.webp"
             alt=""
           />
         </div>
@@ -1352,6 +1352,12 @@ function FacilityVisit() {
               </span>{" "}
               Schedule Campus Walkthrough
             </RequestAction>
+            <RequestAction
+              kind="facilities"
+              className="inline-flex items-center justify-center min-h-[52px] px-space-lg py-3 rounded-full bg-surface-container-lowest text-primary hover:bg-surface-container font-label-lg text-label-lg font-semibold transition-all"
+            >
+              Enquire About Facilities
+            </RequestAction>
             <Link
               className="inline-flex items-center justify-center min-h-[52px] px-space-lg py-3 rounded-full bg-surface-container-lowest text-primary hover:bg-surface-container font-label-lg text-label-lg font-semibold transition-all"
               data-path="p-07-admission-inquiry"
@@ -1364,7 +1370,7 @@ function FacilityVisit() {
               >
                 description
               </span>{" "}
-              Submit Admission Inquiry
+              Submit Admission Enquiry
             </Link>{" "}
             <a
               className="inline-flex items-center justify-center min-h-[48px] px-space-md py-2.5 rounded-full bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md transition-all text-center"
@@ -1386,7 +1392,7 @@ function FacilityVisit() {
 }
 export function FacilitiesContent() {
   return (
-    <main className="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]">
+    <main className="w-full bg-surface">
       <div className="flex flex-col w-full">
         <FacilitiesIntro />
         <Healthcare />

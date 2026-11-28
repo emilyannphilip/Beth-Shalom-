@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { demoCredentials, useDemo } from "./demo-session";
-import { dashboardRoute, type DemoRole } from "./models";
+import { errorMessage, fetchApiJson, jsonRequest } from "@/lib/api";
+import { usePortal } from "./portal-session";
+import { dashboardRoute } from "./models";
 
 export function useLogin() {
-  const { signIn, setSession } = useDemo();
+  const { signIn } = usePortal();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -14,41 +15,11 @@ export function useLogin() {
   const [success, setSuccess] = useState("");
   const [resetOpen, setResetOpen] = useState(false);
   const [resetMessage, setResetMessage] = useState("");
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(
-    () => () => {
-      if (timer.current !== null) clearTimeout(timer.current);
-    },
-    [],
-  );
-
-  function fill(role: DemoRole) {
-    setUsername(demoCredentials[role].username);
-    setPassword(demoCredentials[role].password);
-    setError("");
-    setResetMessage("");
-  }
-
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (timer.current !== null) return;
-    setResetMessage("");
-    const next = signIn(username, password);
-    if (!next) {
-      setError(
-        "These demo credentials did not match an active sample account.",
-      );
-      return;
-    }
-    setError("");
-    setSuccess(
-      next.role === "admin"
-        ? "Opening the Admin demo dashboard…"
-        : "Opening the Staff demo dashboard…",
-    );
-    timer.current = setTimeout(() => setSession(next), 450);
-  }
-
+  const [resetError, setResetError] = useState("");
+  const [resetPending, setResetPending] = useState(false);
+  const [pending, setPending] = useState(false);
+  const busy = useRef(false);
+  const recovering = useRef(false);
   return {
     username,
     setUsername,
@@ -58,43 +29,90 @@ export function useLogin() {
     setShowPassword,
     error,
     success,
+    pending,
     resetOpen,
-    setResetOpen,
     resetMessage,
-    fill,
-    submit,
-    submitReset(event: FormEvent<HTMLFormElement>) {
+    resetError,
+    resetPending,
+    setResetOpen(open: boolean) {
+      if (!recovering.current) {
+        setResetError("");
+        setResetOpen(open);
+      }
+    },
+    async submit(event: FormEvent<HTMLFormElement>) {
       event.preventDefault();
-      event.currentTarget.reset();
-      setResetOpen(false);
-      setResetMessage("Demo password reset only. No email was sent.");
+      if (busy.current) return;
+      const form = new FormData(event.currentTarget);
+      const credentials = {
+        username: String(form.get("username") ?? "").trim(),
+        password: String(form.get("password") ?? ""),
+      };
+      busy.current = true;
+      setPending(true);
+      setError("");
+      setSuccess("Signing in…");
+      try {
+        await signIn(credentials);
+      } catch (failure) {
+        setError(errorMessage(failure));
+        setSuccess("");
+      } finally {
+        busy.current = false;
+        setPending(false);
+      }
+    },
+    async submitReset(event: FormEvent<HTMLFormElement>) {
+      event.preventDefault();
+      if (recovering.current) return;
+      const form = event.currentTarget;
+      const email = String(new FormData(form).get("email") ?? "").trim();
+      recovering.current = true;
+      setResetPending(true);
+      setResetError("");
+      setResetMessage("");
+      try {
+        const { message } = await fetchApiJson<{ message: string }>(
+          "/auth/forgot-password",
+          jsonRequest("POST", { email }),
+        );
+        form.reset();
+        setResetOpen(false);
+        setResetMessage(message);
+      } catch (failure) {
+        setResetError(errorMessage(failure));
+      } finally {
+        recovering.current = false;
+        setResetPending(false);
+      }
     },
   };
 }
 
 export function useLogout() {
-  const { session, setSession } = useDemo();
+  const { session, signOut } = usePortal();
   const router = useRouter();
   const [busy, setBusy] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(
-    () => () => {
-      if (timer.current !== null) clearTimeout(timer.current);
-    },
-    [],
-  );
-
+  const [error, setError] = useState("");
   const staff = session?.role === "staff";
   return {
     busy,
+    error,
     staff,
     name: session?.name,
-    role: staff ? "Staff Access (Restricted)" : "Admin Privilege (RBAC)",
+    role: staff ? "Staff Access" : "Administrator",
     cancel: () => router.push(dashboardRoute(staff ? "staff" : "admin")),
-    confirm() {
-      if (timer.current !== null) return;
+    async confirm() {
+      if (busy) return;
       setBusy(true);
-      timer.current = setTimeout(() => setSession(null), 500);
+      setError("");
+      try {
+        await signOut();
+      } catch (failure) {
+        setError(errorMessage(failure));
+      } finally {
+        setBusy(false);
+      }
     },
   };
 }

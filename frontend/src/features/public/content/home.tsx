@@ -1,16 +1,21 @@
+import { HomeRoomTiles } from "../room-catalogue";
 import Link from "next/link";
 import { SiteImage } from "../site-image";
+import { ChildrenSupportSection } from "./children-support";
 function WelcomeHero() {
   return (
     <section className="relative w-full overflow-hidden bg-primary text-on-primary">
       <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/20 to-transparent z-10"></div>
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-100 scale-105 transform duration-1000 ease-out"
+      <SiteImage
+        className="absolute inset-0 w-full h-full object-cover opacity-100 scale-105 transform duration-1000 ease-out"
+        src="/beth-shalom/assets/home-hero-residents.webp"
+        srcSet="/beth-shalom/assets/home-hero-residents-640.webp 640w, /beth-shalom/assets/home-hero-residents-960.webp 960w, /beth-shalom/assets/home-hero-residents.webp 1376w"
+        sizes="100vw"
+        alt=""
         data-alt="Older women sharing a conversation in the garden of a welcoming residence"
-        style={{
-          backgroundImage: "url('/beth-shalom/assets/home-hero-residents.png')",
-        }}
-      ></div>
+        loading="eager"
+        fetchPriority="high"
+      />
       <div className="relative z-20 max-w-7xl mx-auto px-margin-mobile md:px-margin py-16 md:py-24 lg:py-28 flex flex-col justify-center min-h-[580px]">
         <h1 className="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-surface-bright max-w-4xl tracking-tight mb-6 leading-tight">
           “Where Faith Gives Hope, Love Gives Care, and Peace Becomes Home.”
@@ -41,7 +46,7 @@ function WelcomeHero() {
             href="/admission-enquiry"
             prefetch={false}
           >
-            Submit Admission Inquiry
+            Submit Admission Enquiry
           </Link>{" "}
           <a
             className="inline-flex items-center justify-center min-h-[52px] px-8 rounded-full border border-white/70 bg-white/15 text-surface-bright font-label-lg text-label-lg backdrop-blur-sm hover:bg-white/25 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-tertiary-fixed-dim/40"
@@ -165,7 +170,7 @@ function VirtualTour() {
       <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin grid grid-cols-1 lg:grid-cols-2 gap-space-lg items-center">
         <div className="rounded-2xl overflow-hidden bg-primary-container aspect-[16/9] relative">
           <SiteImage
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOeYIupjlWEfgfbHRjVdz4c4kgpG2SHpfyyga-8ORMqRymZI9cI4-dU0joOfpJPbfqZT0jXdVccAAzs0BbkkQ2DJ5OKDDUk0_XhwT0cjyEMeFtGnMKS4ru2sY6GDIsQcwlWb0zpzOTielQIbiq_QLmPMmtDjNmURtrC8sOkCbfP4r9TIlTbrzu-zRHBNoHV9GrtDvQbF2hr974tGkyvzC5hKMXOHVoGjEhf5vtVA"
+            src="/beth-shalom/assets/design/home-b4205c461c77.webp"
             alt="A sunlit garden courtyard with resident seating and greenery"
             className="w-full h-full object-cover"
             loading="lazy"
@@ -304,7 +309,7 @@ function HeritageSpotlight() {
               <SiteImage
                 className="w-full h-80 lg:h-96 object-cover"
                 data-alt="High quality architectural view of Beth Shalom GMI Retirement Home with terracotta brick façade, white balconies and red tile eaves set against rolling green Kerala hills and rubber plantation groves"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe0wkgcko6snTNOxWskFegQoe1R5G-ucUiVsapCTie3lZ6MItSRwOrp2kJOijGUaF_vwu1a9zgch-zTmzGdoV2dQzfHrmKbDfEMUIvrOBLaXJ64sv7AwXBnppNj8GPZvYz-SAbjog6KIWtyQ24GQJDzx1ULGTT8ZOq-qU_noRyWLYpJkD79WpvDNbrYSBSW5E4EtlyrdbPrLsRXRy1DfCWx8v7_XPw0cp15qFCNQ"
+                src="/beth-shalom/assets/design/home-c68e4731ef8e.webp"
                 alt=""
               />
               <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-primary/90 via-primary/50 to-transparent p-6 text-on-primary">
@@ -497,178 +502,7 @@ function LivingSpacesShowcase() {
             spacious multi-bedroom homes.
           </p>
         </div>
-        <div className="home-refresh-grid home-rooms-grid">
-          <article className="home-room-tile">
-            <SiteImage
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRtvUG0FuIR42NgWoqFqHmu2sFLxCJPNl564CEnV03RLi7z2IGBkaRoraguIjgzUFP_UNXGDzbl2rotdMx0j1c2pZGpDFANrV4jIbJr8U0I2efB8qS0wnbkrXqE3llWCI_TONWt0jzthAQg_pA9cKjYISgKTVCp2atsMhI-NjygfeHmuu1vcT0PNRy2HVw9pGlrugYGJCsjWt6l-FYsGCoznRfbAZzflSnTlZJTQ"
-              alt="Studio bedroom with warm finishes"
-              width={640}
-              height={298}
-              loading="lazy"
-              decoding="async"
-            />
-            <div className="home-room-copy">
-              <h3 className="font-headline-sm text-headline-sm text-primary">
-                Nest Suite
-              </h3>
-              <p className="font-body-md text-body-md">Self-contained studio</p>
-            </div>
-            <Link
-              className="home-room-link font-label-md text-label-md"
-              href="/rooms"
-              data-path="rooms"
-              prefetch={false}
-            >
-              View room options{" "}
-              <span className="material-symbols-outlined " aria-hidden="true">
-                arrow_forward
-              </span>
-            </Link>
-          </article>
-          <article className="home-room-tile">
-            <SiteImage
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDusRpci5ZjJ9HBFUnrfvigLODSf3UmFVaYbOE1qlecESXgrq8ZFSbJxccPlYx3SlNTsAK4UHUtCcxE7e2wxinQDXX2PD7wvCenjOzTAtVCXMXBEANzxuIliKOWqMgYPjSZSp3SDV3H8oxTAXAqZxKyrbOR9v3RkXxPOZ1Y_2mDPW0ZO2r85xpPJZov5dsFuIpoZZEze3hzUlh7oTzPt-GvzfZKjx4XR582HNyJwQ"
-              alt="Bright studio apartment with a kitchenette"
-              width={640}
-              height={298}
-              loading="lazy"
-              decoding="async"
-            />
-            <div className="home-room-copy">
-              <h3 className="font-headline-sm text-headline-sm text-primary">
-                Heaven Residence
-              </h3>
-              <p className="font-body-md text-body-md">
-                Independent living space
-              </p>
-            </div>
-            <Link
-              className="home-room-link font-label-md text-label-md"
-              href="/rooms"
-              data-path="rooms"
-              prefetch={false}
-            >
-              View room options{" "}
-              <span className="material-symbols-outlined " aria-hidden="true">
-                arrow_forward
-              </span>
-            </Link>
-          </article>
-          <article className="home-room-tile">
-            <SiteImage
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEQIwi3ZQTraYEA1F3-dW6Sb_LK4T8UTifOFjo4u2Gfv5tk8bniyV3fK87yiW5nwCip_CJcsZqgF7Mg5Osfv_eyHOMUgiW8brNHC8qMS-FM7L8uYOiMCqTzQP6eLHacvOdQSCxtmdLR_CDxzciBk0eDExrNrU9z0onpOfge55mSL4pfh3BXd10PDE012kJ7KHn18nqlaYJIR2MDOZQ6IcBhdnoecwZAl13-YWTZg"
-              alt="Residence with a separate sitting area"
-              width={640}
-              height={298}
-              loading="lazy"
-              decoding="async"
-            />
-            <div className="home-room-copy">
-              <h3 className="font-headline-sm text-headline-sm text-primary">
-                Aura Sanctuary
-              </h3>
-              <p className="font-body-md text-body-md">
-                Private or shared living
-              </p>
-            </div>
-            <Link
-              className="home-room-link font-label-md text-label-md"
-              href="/rooms"
-              data-path="rooms"
-              prefetch={false}
-            >
-              View room options{" "}
-              <span className="material-symbols-outlined " aria-hidden="true">
-                arrow_forward
-              </span>
-            </Link>
-          </article>
-          <article className="home-room-tile">
-            <SiteImage
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnjaULLJKn2ijZG7BDCFdsLFxptgdi4vmKST7bUYksvgCt_09-iaYQ__ofsmN86bmFIhP-N1GOImLtU-tgPNpf2uN-Nh6gXOenBI3pz9Yp9_mQYKC_k5HkTS3fjVoIQc-Kng7Nwy3YRyIogeRK7R6IEFxokvWyUta-9JOB8XCOFzvRCXTUgPiDcGVMesF2zu64J3jAE_0KPcoqaM7fK25vXu5bQbTlhe39IRS29g"
-              alt="Living room overlooking a garden terrace"
-              width={640}
-              height={298}
-              loading="lazy"
-              decoding="async"
-            />
-            <div className="home-room-copy">
-              <h3 className="font-headline-sm text-headline-sm text-primary">
-                Vista Living
-              </h3>
-              <p className="font-body-md text-body-md">Shared residence</p>
-            </div>
-            <Link
-              className="home-room-link font-label-md text-label-md"
-              href="/rooms"
-              data-path="rooms"
-              prefetch={false}
-            >
-              View room options{" "}
-              <span className="material-symbols-outlined " aria-hidden="true">
-                arrow_forward
-              </span>
-            </Link>
-          </article>
-          <article className="home-room-tile">
-            <SiteImage
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7YOv-wCW-br_k4henGWsWacrs6FLUv_2RwcN6jaGWKxPG9uHeelARLwKTolf_hgeDd4V3n-_TNL4ZHEPKMHhPNUTJoPjSD1tMfuBUJ6RawURMuUIfshSEvW2ifzEH4FU5APzDb6J0saaXRW9HOsNU-HnvFhIELOQVzDwAGqeEISSG8Pciaub8dWbwlpCAOifs6fu157iokllKdxs3U9uYlnv6RzgPaF7EGOuYmA"
-              alt="Spacious living area with views of the hills"
-              width={640}
-              height={298}
-              loading="lazy"
-              decoding="async"
-            />
-            <div className="home-room-copy">
-              <h3 className="font-headline-sm text-headline-sm text-primary">
-                Harmony Retreat
-              </h3>
-              <p className="font-body-md text-body-md">
-                Multi-bedroom residence
-              </p>
-            </div>
-            <Link
-              className="home-room-link font-label-md text-label-md"
-              href="/rooms"
-              data-path="rooms"
-              prefetch={false}
-            >
-              View room options{" "}
-              <span className="material-symbols-outlined " aria-hidden="true">
-                arrow_forward
-              </span>
-            </Link>
-          </article>
-          <article className="home-room-tile">
-            <SiteImage
-              src="/beth-shalom/assets/grenada-apartment.jpg"
-              alt="Illustrative view of landscaped apartments"
-              width={640}
-              height={298}
-              loading="lazy"
-              decoding="async"
-            />
-            <div className="home-room-copy">
-              <h3 className="font-headline-sm text-headline-sm text-primary">
-                Grenada Apartment
-              </h3>
-              <p className="font-body-md text-body-md">
-                Resort-style shared living
-              </p>
-            </div>
-            <Link
-              className="home-room-link font-label-md text-label-md"
-              href="/rooms"
-              data-path="rooms"
-              prefetch={false}
-            >
-              View room options{" "}
-              <span className="material-symbols-outlined " aria-hidden="true">
-                arrow_forward
-              </span>
-            </Link>
-          </article>
-        </div>
+        <HomeRoomTiles />
         <div className="home-refresh-actions">
           <Link
             className="home-refresh-action font-label-md text-label-md"
@@ -771,7 +605,7 @@ function FacilitiesHighlights() {
                 <SiteImage
                   className="w-full h-48 sm:h-56 object-cover"
                   data-alt="Interior view of a sunlit peaceful Christian prayer chapel with wooden altar, candles, and cross in Beth Shalom retirement home Kottayam"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDNdPCXWsdRxU3Poa0-NIkzmNNGM3P1kJn3gzIP7FOxI3bFGFwIfLEc7IEW6ZJC9dbCE7WGROJc7dsMZiBA8zEqzrlH1lACwEAry0DIm1N3bVWp3mEU6ewiLPVyHBCaV-rtvqkv448EddA3iEwLniOivCi5tn_s1AFYW-38G6CvcEBIvdWjRJrAitM2raGSDPZkZRZcuQVD4bf79z08UX7m51V5z9DQBh1n6-xQg"
+                  src="/beth-shalom/assets/design/home-9b3562340f30.webp"
                   alt=""
                 />
               </div>
@@ -779,7 +613,7 @@ function FacilitiesHighlights() {
                 <SiteImage
                   className="w-full h-48 sm:h-56 object-cover"
                   data-alt="Senior physiotherapy gym and wellness room with mobility rails, gentle exercise equipment, and therapist assisting an elderly patient"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDg92oM2JYzlt3QdJIVkp2drXZTXzHO2g5g6Q-TA0JoKQBKbiBwlufQRQO37rboATNy1_cdcSvekAEBpexZkB1XqS_YAlcQhauaIJ6X8uhyu0smk5Rxtl_viu1dp6a-L-BUMgV5n7wYi6Euhb-5uoW6mpp9FQInTCyXPTlRh3nMFa6LVrxGkiQuC3Uxm6PQXEkm86cxjbyiI2JUAFeoJkkr5UxYjR3Lhey4zaGPpA"
+                  src="/beth-shalom/assets/design/home-d64c8a1a0e2d.webp"
                   alt=""
                 />
               </div>
@@ -787,7 +621,7 @@ function FacilitiesHighlights() {
                 <SiteImage
                   className="w-full h-48 sm:h-56 object-cover"
                   data-alt="Central airy botanical courtyard and indoor atrium with skylight, lush indoor plants, comfortable seating and elders reading together"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOeYIupjlWEfgfbHRjVdz4c4kgpG2SHpfyyga-8ORMqRymZI9cI4-dU0joOfpJPbfqZT0jXdVccAAzs0BbkkQ2DJ5OKDDUk0_XhwT0cjyEMeFtGnMKS4ru2sY6GDIsQcwlWb0zpzOTielQIbiq_QLmPMmtDjNmURtrC8sOkCbfP4r9TIlTbrzu-zRHBNoHV9GrtDvQbF2hr974tGkyvzC5hKMXOHVoGjEhf5vtVA"
+                  src="/beth-shalom/assets/design/home-b4205c461c77.webp"
                   alt=""
                 />
               </div>
@@ -795,7 +629,7 @@ function FacilitiesHighlights() {
                 <SiteImage
                   className="w-full h-48 sm:h-56 object-cover"
                   data-alt="Warm modern senior recreation lounge and home theater with comfortable armchairs where residents gather for community fellowship"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtT4cAvBdWP_3KI-5hcf5pz7gf0Qxe3g-pN3NMWSeXmUfAa3NSxdI5JiY6yVi_OvFfdYBFDilnWmkmx53U0vTxvr_YEJ4mKvm4PYXoPwIcc7ZGOFqUpmHFg6Q28g500-osEP7d82TBUOFtnPqJ8Dy0tb-1KxxiI85NPO9pmb7BlcW6XQ1Shy1YyJPHL9QoFsZ1cbLL-jY5cPJNVzYcAdGYyH_brwNYdGr9ZIhQIQ"
+                  src="/beth-shalom/assets/design/home-6d3f012045e6.webp"
                   alt=""
                 />
               </div>
@@ -895,7 +729,7 @@ function GuidedVisit() {
               href="/admission-enquiry"
               prefetch={false}
             >
-              Inquire for Admission
+              Enquire About Admission
             </Link>{" "}
             <a
               className="w-full sm:w-auto inline-flex items-center justify-center min-h-[52px] px-8 rounded-full bg-surface-container-highest text-primary font-label-md text-label-md hover:bg-surface-container transition-colors"
@@ -917,13 +751,14 @@ function GuidedVisit() {
 }
 export function HomeContent() {
   return (
-    <main className="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]">
+    <main className="w-full bg-surface">
       <div className="flex flex-col w-full">
         <WelcomeHero />
         <LogoStory />
         <VirtualTour />
         <HeritageSpotlight />
         <MissionPillars />
+        <ChildrenSupportSection />
         <LivingSpacesShowcase />
         <FacilitiesHighlights />
         <GuidedVisit />

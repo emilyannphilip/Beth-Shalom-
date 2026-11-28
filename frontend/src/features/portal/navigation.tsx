@@ -9,7 +9,7 @@ import {
   type ComponentProps,
 } from "react";
 import { DetailDialog } from "./portal-dialog";
-import { useDemo } from "./demo-session";
+import { usePortal } from "./portal-session";
 
 function subscribeToMobile(callback: () => void) {
   const media = window.matchMedia("(max-width: 767px)");
@@ -102,6 +102,7 @@ export function PortalLink({
   sidebar?: boolean;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const hash = useSyncExternalStore(
     subscribe,
     () => window.location.hash,
@@ -129,6 +130,14 @@ export function PortalLink({
       aria-current={activeProp}
       href={href}
       prefetch={false}
+      onPointerEnter={(event) => {
+        if (
+          process.env.NODE_ENV === "production" &&
+          pathname !== href.split("#")[0]
+        )
+          router.prefetch(href);
+        props.onPointerEnter?.(event);
+      }}
       onClick={close}
     >
       {children}
@@ -149,7 +158,7 @@ export function LogoutButton(props: ComponentProps<"button">) {
 
 export function ProfileButton(props: ComponentProps<"button">) {
   const [open, setOpen] = useState(false);
-  const { session } = useDemo();
+  const { session } = usePortal();
   const staff = session?.role === "staff";
   return (
     <>
@@ -161,16 +170,23 @@ export function ProfileButton(props: ComponentProps<"button">) {
       />
       <DetailDialog
         title={
-          open ? (staff ? "My Profile & Rota" : "Profile & Security") : null
+          open ? (staff ? "My Profile" : "Profile & Security") : null
         }
         dismiss={() => setOpen(false)}
       >
         <p className="text-body-md">
           {session?.name} ·{" "}
           {staff
-            ? "Staff Access (Restricted). Contact the Administration Desk at ext. 4010 for rota and account changes."
-            : "Admin Privilege (RBAC). Sign out when you finish using this demo."}
+            ? "Staff. Contact the Administration Desk at ext. 4010 for account changes."
+            : "Administrator. Sign out when you finish using the portal."}
         </p>
+        <Link
+          className="mt-4 inline-block underline text-primary"
+          href="/portal/change-password"
+          onClick={() => setOpen(false)}
+        >
+          Change Password
+        </Link>
       </DetailDialog>
     </>
   );

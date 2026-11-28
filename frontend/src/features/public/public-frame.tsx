@@ -37,13 +37,13 @@ export function PublicFrame({ children }: { children: ReactNode }) {
   }, [router]);
 
   return (
-    <section
+    <div
       id={`page-${view.toLowerCase()}`}
       data-page={view}
-      className="bg-surface font-body-md text-body-md text-on-surface antialiased"
+      className="contents font-body-md text-body-md text-on-surface antialiased"
     >
-      <SiteHeader key={view} view={view} pathname={pathname} />
+      <SiteHeader view={view} pathname={pathname} />
       {children}
-    </section>
+    </div>
   );
 }

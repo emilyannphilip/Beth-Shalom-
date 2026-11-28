@@ -2,15 +2,15 @@ services:
   postgres:
     image: postgres:17
     environment:
-      POSTGRES_DB: beth_shalom
+      POSTGRES_DB: beth_shalom_db
       POSTGRES_USER: beth_shalom
-      POSTGRES_PASSWORD: local_dev_only
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a local development database password}
     ports:
-      - "127.0.0.1:5433:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
     volumes:
       - beth-shalom-pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "beth_shalom", "-d", "beth_shalom"]
+      test: ["CMD", "pg_isready", "-U", "beth_shalom", "-d", "beth_shalom_db"]
       interval: 5s
       timeout: 5s
       retries: 10

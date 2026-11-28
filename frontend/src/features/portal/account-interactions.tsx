@@ -1,8 +1,11 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { demoCredentials, useDemo } from "./demo-session";
-import { useGrid } from "./grid";
+import { useRef, useState, type FormEvent } from "react";
+import { errorMessage } from "@/lib/api";
+import { writeApi } from "@/lib/api-hooks";
+import { usePortal } from "./portal-session";
+import { staffRecord } from "./portal-api";
+import { useServerGrid } from "./server-grid";
 import { type StaffAccount, staffDesignations } from "./models";
 
 const blank = {
@@ -15,105 +18,97 @@ const blank = {
 } as const;
 
 export function useStaffManagement() {
-  const { accounts, saveAccount } = useDemo();
+  const { accounts, summary, saveStaff } = usePortal();
   const [editing, setEditing] = useState<StaffAccount | null>(null);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+  const busy = useRef(false);
   const [confirmation, setConfirmation] = useState<{
     action: "toggle" | "reset";
     account: StaffAccount;
   } | null>(null);
-  const grid = useGrid(accounts, {
-    pageSize: 4,
-    searchValue: (row) =>
-      [
-        row.name,
-        row.username,
-        row.email,
-        row.phone,
-        row.designation,
-        row.status,
-      ].join(" "),
-    categoryValue: (row) => row.designation,
-    statusValue: (row) => row.status,
-  });
-
-  function submit(event: FormEvent<HTMLFormElement>) {
+  const grid = useServerGrid(
+    "/staff",
+    4,
+    staffRecord,
+    ({ search, category, status, sort }) => ({
+      search,
+      designation: category === "ALL" ? undefined : category,
+      status: status === "ALL" ? undefined : status.toUpperCase(),
+      sortBy: sort === "newest" ? "created_at" : "full_name",
+      sortOrder: sort === "az" ? "asc" : "desc",
+    }),
+  );
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (busy.current) return;
     const form = event.currentTarget;
     const data = new FormData(form);
     const value = (key: string) => String(data.get(key) ?? "").trim();
-    const username = value("username");
-    const lower = username.toLowerCase();
-    const usernameField = form.elements.namedItem("username");
-    const passwordField = form.elements.namedItem("confirmation");
-    const duplicate =
-      lower === demoCredentials.admin.username ||
-      accounts.some(
-        (account) =>
-          account.id !== editing?.id &&
-          account.username.toLowerCase() === lower,
-      );
-
-    if (duplicate && usernameField instanceof HTMLInputElement) {
-      usernameField.setCustomValidity("This username is already in use.");
-      usernameField.reportValidity();
-      return;
-    }
-
     const password = String(data.get("password") ?? "");
+    const confirmationField = form.elements.namedItem("confirmation");
     if (
-      password !== data.get("confirmation") &&
-      passwordField instanceof HTMLInputElement
+      password !== String(data.get("confirmation") ?? "") &&
+      confirmationField instanceof HTMLInputElement
     ) {
-      passwordField.setCustomValidity("Demo passwords must match.");
-      passwordField.reportValidity();
+      confirmationField.setCustomValidity("Passwords must match.");
+      confirmationField.reportValidity();
       return;
     }
-
-    const designation =
-      staffDesignations.find((item) => item === value("designation")) ??
-      staffDesignations[0];
-    saveAccount({
-      id: editing?.id ?? crypto.randomUUID(),
-      name: value("name"),
-      username,
-      email: value("email"),
-      phone: value("phone"),
-      designation,
-      status: value("status") === "Inactive" ? "Inactive" : "Active",
-      avatarClass:
-        editing?.avatarClass ??
-        "w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center font-bold text-label-sm shrink-0",
-      demoPassword:
-        password ||
-        editing?.demoPassword ||
-        (editing?.username === demoCredentials.staff.username
-          ? demoCredentials.staff.password
-          : undefined),
-    });
-    setOpen(false);
-    setMessage(
-      editing
-        ? "Sample staff account updated."
-        : "Sample staff account created.",
-    );
+    busy.current = true;
+    setPending(true);
+    setError("");
+    try {
+      await saveStaff(
+        {
+          id: editing?.id ?? "",
+          name: value("name"),
+          username: value("username"),
+          email: value("email"),
+          phone: value("phone"),
+          designation:
+            staffDesignations.find((item) => item === value("designation")) ??
+            staffDesignations[0],
+          status: value("status") === "Inactive" ? "Inactive" : "Active",
+          avatarClass: "",
+        },
+        password,
+        Boolean(editing),
+      );
+      setOpen(false);
+      setMessage(editing ? "Staff account updated." : "Staff account created.");
+    } catch (failure) {
+      setError(errorMessage(failure));
+    } finally {
+      busy.current = false;
+      setPending(false);
+    }
   }
-
   return {
+    counts: {
+      total: summary?.total_staff ?? accounts.length,
+      active: summary?.active_staff ?? 0,
+      inactive:
+        (summary?.total_staff ?? accounts.length) -
+        (summary?.active_staff ?? 0),
+      admins: accounts.filter((row) => row.designation.endsWith("(Admin)"))
+        .length,
+    },
     editing,
     open,
     grid,
     values: editing ?? blank,
     confirmation,
     message,
+    error,
+    pending,
+    submit,
     onInput(event: FormEvent<HTMLFormElement>) {
-      const form = event.currentTarget;
-      const target = event.target;
-      if (!(target instanceof HTMLInputElement)) return;
-      target.setCustomValidity("");
-      if (target.name === "password") {
-        const field = form.elements.namedItem("confirmation");
+      if (event.target instanceof HTMLInputElement) {
+        event.target.setCustomValidity("");
+        const field = event.currentTarget.elements.namedItem("confirmation");
         if (field instanceof HTMLInputElement) field.setCustomValidity("");
       }
     },
@@ -121,32 +116,50 @@ export function useStaffManagement() {
       setEditing(null);
       setOpen(true);
       setMessage("");
+      setError("");
     },
     edit(record: StaffAccount) {
       setEditing(record);
       setOpen(true);
       setMessage("");
+      setError("");
     },
-    dismiss: () => setOpen(false),
-    submit,
-    toggle: (account: StaffAccount) =>
-      setConfirmation({ action: "toggle", account }),
-    reset: (account: StaffAccount) =>
-      setConfirmation({ action: "reset", account }),
-    cancelConfirmation: () => setConfirmation(null),
-    confirm() {
-      if (!confirmation) return;
+    dismiss() {
+      if (!busy.current) setOpen(false);
+    },
+    toggle: (account: StaffAccount) => {
+      setError("");
+      setConfirmation({ action: "toggle", account });
+    },
+    reset: (account: StaffAccount) => {
+      setError("");
+      setConfirmation({ action: "reset", account });
+    },
+    cancelConfirmation() {
+      if (!busy.current) setConfirmation(null);
+    },
+    async confirm() {
+      if (!confirmation || busy.current) return;
       const { account, action } = confirmation;
-      if (action === "toggle") {
-        const status = account.status === "Active" ? "Inactive" : "Active";
-        saveAccount({ ...account, status });
-        setMessage(
-          `${account.name}'s demo account is now ${status.toLowerCase()}.`,
-        );
-      } else {
-        setMessage("Demo reset only. No reset instructions were sent.");
+      busy.current = true;
+      setPending(true);
+      try {
+        if (action === "toggle") {
+          const route = account.status === "Active" ? "deactivate" : "activate";
+          await writeApi(`/staff/${account.id}/${route}`, "POST");
+          setMessage("Staff account status updated.");
+        } else {
+          await writeApi(`/staff/${account.id}/password-reset`,"POST");
+          setMessage("A password reset link was requested.");
+        }
+        setConfirmation(null);
+      } catch (failure) {
+        setError(errorMessage(failure));
+        setMessage("");
+      } finally {
+        busy.current = false;
+        setPending(false);
       }
-      setConfirmation(null);
     },
   };
 }

@@ -134,7 +134,7 @@ export function WhatsAppShortcut() {
         chat
       </span>
       <span className="font-label-md text-label-md hidden sm:inline">
-        WhatsApp Inquiry
+        WhatsApp Enquiry
       </span>
     </a>
   );

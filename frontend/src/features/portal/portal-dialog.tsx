@@ -94,11 +94,15 @@ export function ConfirmDialog({
   message,
   dismiss,
   accept,
+  error,
+  pending,
 }: {
   title: string | null;
   message?: string;
   dismiss: () => void;
   accept: () => void;
+  error?: string;
+  pending?: boolean;
 }) {
   return (
     <PortalDialog
@@ -109,6 +113,11 @@ export function ConfirmDialog({
     >
       <h2 className="font-headline text-headline-md mb-4">{title}</h2>
       <p className="text-body-md">{message}</p>
+      {error && (
+        <p role="alert" className="text-error">
+          {error}
+        </p>
+      )}
       <div className="mt-4 flex gap-3">
         <button
           type="button"
@@ -120,6 +129,7 @@ export function ConfirmDialog({
         <button
           type="button"
           className="rounded-md bg-primary px-4 py-2 text-on-primary text-label-md"
+          disabled={pending}
           onClick={accept}
         >
           Confirm

@@ -1,29 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useDemo } from "./demo-session";
-import { useGrid } from "./grid";
-import {
-  enquiryStatuses,
-  type DemoRole,
-  type Enquiry,
-  type EnquiryStatus,
-} from "./models";
-
-function compareEnquiries(first: Enquiry, second: Enquiry, sort: string) {
-  if (sort === "priority")
-    return (
-      enquiryStatuses.indexOf(first.status) -
-      enquiryStatuses.indexOf(second.status)
-    );
-  const convert = (value: string, fallback: number) =>
-    Number.isNaN(Date.parse(value)) ? fallback : Date.parse(value);
-  if (sort === "visit")
-    return (
-      convert(first.visit, Infinity) - convert(second.visit, Infinity) || 0
-    );
-  return convert(second.date, -Infinity) - convert(first.date, -Infinity) || 0;
-}
+import { useRef, useState } from "react";
+import { allRecords, errorMessage } from "@/lib/api";
+import { enquiryRecord, enquiryState, type Row } from "./portal-api";
+import { usePortal } from "./portal-session";
+import { useServerGrid } from "./server-grid";
+import { type Enquiry, type EnquiryStatus } from "./models";
 
 function csvCell(value: string) {
   const safe = /^[\s]*[=+@-]|^[\t\r]/.test(value) ? "'" + value : value;
@@ -50,7 +32,7 @@ function downloadEnquiries(rows: Enquiry[]) {
     ...rows.map((row) => {
       const latest = row.audit?.at(-1);
       return [
-        row.id,
+        row.number ?? row.id,
         row.name,
         row.phone,
         row.email,
@@ -79,35 +61,34 @@ function downloadEnquiries(rows: Enquiry[]) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function useEnquiryWorkspace(role: DemoRole) {
-  const { enquiries, saveEnquiry } = useDemo();
-  const admin = role === "admin";
+export function useEnquiryWorkspace() {
+  const { categories, saveEnquiry, enquiryDetail } = usePortal();
   const [selected, setSelected] = useState<Enquiry | null>(null);
   const [status, setStatus] = useState<EnquiryStatus>("New");
   const [remarks, setRemarks] = useState("");
-
-  const grid = useGrid(
-    admin ? enquiries : enquiries.filter((row) => row.staff),
-    {
-      pageSize: admin ? 5 : 3,
-      searchValue: (row) =>
-        [
-          row.id,
-          row.name,
-          admin ? row.relationship : "",
-          row.phone,
-          admin ? row.email : "",
-          row.category,
-          row.date,
-          row.visit,
-          row.status,
-        ].join(" "),
-      categoryValue: (row) => row.category,
-      statusValue: (row) => row.status,
-      compare: admin ? compareEnquiries : undefined,
-    },
+  const [error, setError] = useState("");
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [pending, setPending] = useState(false);
+  const latest = useRef(0);
+  const saving = useRef(false);
+  const grid = useServerGrid(
+    "/enquiries",
+    5,
+    (row) => enquiryRecord(row, categories),
+    (filters) => ({
+      search: filters.search,
+      categoryId: filters.category === "ALL" ? undefined : filters.category,
+      status:
+        filters.status === "ALL" ? undefined : enquiryState(filters.status),
+      sortBy:
+        filters.sort === "visit"
+          ? "preferred_date"
+          : filters.sort === "priority"
+            ? "status"
+            : "created_at",
+      sortOrder: filters.sort === "visit" ? "asc" : "desc",
+    }),
   );
-
   return {
     grid,
     selected,
@@ -115,23 +96,58 @@ export function useEnquiryWorkspace(role: DemoRole) {
     setStatus,
     remarks,
     setRemarks,
-    detailNotes: admin ? selected?.notes : selected?.staff?.notes,
-    show(record: Enquiry) {
+    error,
+    detailLoading,
+    pending,
+    detailNotes: selected?.notes,
+    async show(record: Enquiry) {
+      const request = ++latest.current;
       setSelected(record);
       setStatus(record.status);
-      setRemarks(
-        admin || record.audit?.length
-          ? record.remarks
-          : (record.staff?.remarks ?? ""),
-      );
+      setRemarks("");
+      setError("");
+      setDetailLoading(true);
+      try {
+        const detail = await enquiryDetail(record.id);
+        if (request === latest.current) {
+          setSelected(detail);
+          setStatus(detail.status);
+        }
+      } catch (failure) {
+        if (request === latest.current) setError(errorMessage(failure));
+      } finally {
+        if (request === latest.current) setDetailLoading(false);
+      }
     },
-    dismiss: () => setSelected(null),
-    save() {
-      if (selected) saveEnquiry(selected.id, status, remarks.trim());
-      setSelected(null);
+    dismiss() {
+      if (!saving.current) {
+        latest.current++;
+        setSelected(null);
+        setError("");
+      }
     },
-    download: () => {
-      if (admin) downloadEnquiries(grid.matched);
+    async save() {
+      if (!selected || saving.current) return;
+      saving.current = true;
+      setPending(true);
+      setError("");
+      try {
+        await saveEnquiry(selected.id, status, remarks.trim());
+        setSelected(null);
+      } catch (failure) {
+        setError(errorMessage(failure));
+      } finally {
+        saving.current = false;
+        setPending(false);
+      }
+    },
+    async download() {
+      try {
+        const rows = await allRecords<Row>("/enquiries", grid.params);
+        downloadEnquiries(rows.map((row) => enquiryRecord(row, categories)));
+      } catch (failure) {
+        setError(errorMessage(failure));
+      }
     },
   };
 }

@@ -1,4 +1,5 @@
 "use client";
+import { PublicRoomAvailability } from "./room-availability";
 
 import {
   createContext,
@@ -10,10 +11,9 @@ import {
 import { Modal } from "./modal";
 import { RequestAction } from "./requests";
 
-type Category = "studio" | "1bed" | "suite";
-type Filter = Category | "all";
-
 interface RoomPreview {
+  id: string;
+  code: string;
   title: string;
   category: string;
   units: string;
@@ -21,14 +21,14 @@ interface RoomPreview {
 }
 
 const RoomContext = createContext<{
-  filter: Filter;
-  setFilter: (filter: Filter) => void;
+  filter: string;
+  setFilter: (filter: string) => void;
   preview: RoomPreview | null;
   setPreview: (room: RoomPreview | null) => void;
 }>({ filter: "all", setFilter: () => {}, preview: null, setPreview: () => {} });
 
 export function RoomsProvider({ children }: { children: ReactNode }) {
-  const [filter, setFilter] = useState<Filter>("all");
+  const [filter, setFilter] = useState("all");
   const [preview, setPreview] = useState<RoomPreview | null>(null);
 
   return (
@@ -37,6 +37,8 @@ export function RoomsProvider({ children }: { children: ReactNode }) {
     </RoomContext.Provider>
   );
 }
+
+export const useRoomFilter = () => useContext(RoomContext).filter;
 
 const filterColors = new Set([
   "bg-primary",
@@ -47,9 +49,9 @@ const filterColors = new Set([
 
 export function RoomFilterButton({
   filter,
-  className = "",
+  className = "filter-tab min-h-[44px] px-5 py-2 rounded-full font-label-md text-label-md transition-colors",
   ...props
-}: ComponentProps<"button"> & { filter: Filter }) {
+}: ComponentProps<"button"> & { filter: string }) {
   const { filter: active, setFilter } = useContext(RoomContext);
   const pressed = filter === active;
   const base = className
@@ -64,23 +66,6 @@ export function RoomFilterButton({
       className={`${base} ${pressed ? "bg-primary text-on-primary" : "bg-surface-container text-on-surface"}`}
       aria-pressed={pressed}
       onClick={() => setFilter(filter)}
-    />
-  );
-}
-
-export function RoomCard({
-  category,
-  as: Tag,
-  className,
-  ...props
-}: ComponentProps<"div"> & { category: Category; as: "div" | "article" }) {
-  const { filter } = useContext(RoomContext);
-  const filtered = filter !== "all" && filter !== category;
-  return (
-    <Tag
-      {...props}
-      hidden={filtered}
-      className={filtered ? (className ?? "") + " hidden" : className}
     />
   );
 }
@@ -123,12 +108,21 @@ export function RoomPreviewModal({
 }
 
 export function RoomValue({ field }: { field: keyof RoomPreview }) {
-  return useContext(RoomContext).preview?.[field] ?? null;
+  const preview = useContext(RoomContext).preview;
+  if (!preview) return null;
+  if (field === "units")
+    return <PublicRoomAvailability category={preview.code} />;
+  return preview[field];
 }
 
 export function RoomApplicationButton(props: ComponentProps<"button">) {
   const { preview } = useContext(RoomContext);
   return (
-    <RequestAction {...props} kind="room" category={preview?.title ?? ""} />
+    <RequestAction
+      {...props}
+      kind="room"
+      category={preview?.title ?? ""}
+      categoryId={preview?.id}
+    />
   );
 }

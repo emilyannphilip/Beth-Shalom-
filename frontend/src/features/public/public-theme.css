@@ -114,12 +114,12 @@ header [data-path="home"] .font-headline-sm {
   will-change: max-height, opacity, transform;
 }
 .mobile-menu-panel.is-open {
-  max-height: calc(100dvh - 7rem);
+  max-height: calc(100dvh - var(--public-header-height, 7rem));
   opacity: 1;
   transform: translateY(0);
 }
 .mobile-menu-scroll {
-  max-height: calc(100dvh - 7.5rem);
+  max-height: calc(100dvh - var(--public-header-height, 7rem) - 0.5rem);
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -534,11 +534,20 @@ header [data-path="home"] .font-headline-sm {
   border-radius: 1.35rem;
   box-shadow: 0 5px 16px #173d2c0d;
 }
-.home-room-tile img {
+.home-room-tile img,
+.home-room-photo-placeholder {
   width: 100%;
   aspect-ratio: 2.15;
+}
+
+.home-room-tile img {
   object-fit: cover;
   display: block;
+}
+
+.home-room-photo-placeholder {
+  display: grid;
+  place-items: center;
 }
 .home-room-copy {
   flex: 1;

@@ -1,4 +1,7 @@
 "use client";
+import { primaryButton, fieldClass } from "../management-ui";
+import { PortalDataStatus } from "../portal-session";
+import { RecordFeedback } from "../record-actions";
 import {
   PortalTable,
   TableRows,
@@ -6,7 +9,7 @@ import {
   GridSearch,
   GridSelect,
 } from "../grid";
-import { PortalFrame, DemoNotice } from "../portal-frame";
+import { PortalFrame } from "../portal-frame";
 import { PortalDialog } from "../portal-dialog";
 import { LogoutButton } from "../navigation";
 import { ResidentRow } from "../table-rows";
@@ -15,19 +18,20 @@ import { ResidentEditor } from "../resident-dialogs";
 import { DashboardCard } from "../status-badge";
 import { useResidentManagement } from "../resident-interactions";
 import { badges } from "../status-badge";
-export function ResidentManagement() {
+import { contactFields, medicalFields } from "../models";
+export function ResidentManagement({ staff = false }: { staff?: boolean }) {
   const ui = useResidentManagement();
   const { grid } = ui;
   return (
     <PortalFrame>
-      <PortalSidebar screen="residents" />
+      <PortalSidebar screen={staff ? "staff" : "residents"} />
       <div className="flex-1 flex flex-col min-w-0">
         <header className="bg-white border-b border-outline-variant px-6 py-3.5 flex items-center justify-between sticky top-0 z-20">
           <div>
             <h1 className="font-headline text-headline-sm text-on-surface">
               Admitted Residents Management
             </h1>
-            <DemoNotice />
+            <RecordFeedback />
             <p className="text-body-sm text-on-surface-variant">
               Personal Records, Clinical Care Plans, Emergency Contacts &amp;
               Suite Allocations
@@ -45,12 +49,12 @@ export function ResidentManagement() {
               >
                 person_add
               </span>
-              <span>Add New Resident</span>
+              <span>+ Add Resident</span>
             </button>
             <div className="h-8 w-px bg-outline-variant mx-1"></div>
             <LogoutButton
               type="button"
-              title="Sign out of Admin Portal"
+              title="Sign out of portal"
               aria-label="Secure Logout"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-variant/40 text-on-surface hover:text-error hover:bg-error-container/40 hover:border-error/30 font-label text-label-sm transition-all focus-visible:ring-2 focus-visible:ring-primary"
             >
@@ -71,10 +75,10 @@ export function ResidentManagement() {
                 Current In-Residence
               </span>
               <div className="font-headline text-headline-md text-on-surface tabular-nums mt-1">
-                148
+                {ui.counts.total}
               </div>
               <span className="text-body-sm text-success font-medium">
-                98.6% Capacity
+                Sample records
               </span>
             </DashboardCard>
             <DashboardCard className="bg-white border border-outline-variant rounded-xl p-4 shadow-sm">
@@ -82,7 +86,7 @@ export function ResidentManagement() {
                 Supported Living Units
               </span>
               <div className="font-headline text-headline-md text-secondary tabular-nums mt-1">
-                42
+                {ui.counts.supported}
               </div>
               <span className="text-body-sm text-on-surface-variant">
                 Wing B &amp; Garden Terrace
@@ -93,7 +97,7 @@ export function ResidentManagement() {
                 Memory Care Suite
               </span>
               <div className="font-headline text-headline-md text-tertiary tabular-nums mt-1">
-                26
+                {ui.counts.memory}
               </div>
               <span className="text-body-sm text-on-surface-variant">
                 24/7 Monitored Corridor
@@ -104,10 +108,10 @@ export function ResidentManagement() {
                 Active Care Directives
               </span>
               <div className="font-headline text-headline-md text-primary tabular-nums mt-1">
-                148
+                {ui.counts.care}
               </div>
               <span className="text-body-sm text-on-surface-variant">
-                All dossiers verified
+                Sample care records
               </span>
             </DashboardCard>
           </section>
@@ -124,6 +128,13 @@ export function ResidentManagement() {
                     information.
                   </p>
                 </div>
+                <button
+                  type="button"
+                  className={primaryButton}
+                  onClick={ui.create}
+                >
+                  + Add
+                </button>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2">
                 <div className="relative sm:col-span-2">
@@ -136,7 +147,7 @@ export function ResidentManagement() {
                   <GridSearch
                     id="resident-search-input"
                     type="search"
-                    placeholder="Search resident name, ID (e.g. RES-2026-012), or room number..."
+                    placeholder="Search name, ID, room, dormitory or bed"
                     className="w-full pl-9 pr-3 py-1.5 text-body-sm bg-surface/50 border border-outline-variant rounded-md text-on-surface focus:bg-white focus:ring-1 focus:ring-primary focus-visible:ring-2 focus-visible:ring-primary"
                     aria-label="Search residents"
                     value={grid.search}
@@ -184,7 +195,44 @@ export function ResidentManagement() {
                 </div>
               </div>
             </div>
-            <div className="overflow-x-auto">
+            <div className="p-4 flex flex-wrap gap-3 border-b border-outline-variant">
+              <label>
+                Accommodation
+                <select
+                  className={fieldClass}
+                  value={ui.accommodation}
+                  onChange={(e) => ui.setAccommodation(e.currentTarget.value)}
+                >
+                  <option value="ALL">All rooms, dormitories and beds</option>
+                  {ui.filterOptions.map((value) => (
+                    <option key={value}>{value}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Sort residents
+                <select
+                  className={fieldClass}
+                  value={grid.sort}
+                  onChange={(e) => grid.setSort(e.currentTarget.value)}
+                >
+                  <option value="newest">Default order</option>
+                  <option value="az">Name A–Z</option>
+                  <option value="za">Name Z–A</option>
+                </select>
+              </label>
+            </div>
+            <div
+              className="overflow-x-auto"
+              role="region"
+              aria-label="Resident directory table"
+              tabIndex={0}
+            >
+              <PortalDataStatus
+                loading={grid.loading || ui.detailLoading}
+                error={grid.error || ui.detailError}
+                retry={grid.retry}
+              />
               <PortalTable className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-surface-variant/70 text-on-surface-variant border-b border-outline-variant font-label text-label-md">
@@ -207,13 +255,22 @@ export function ResidentManagement() {
                       scope="col"
                       className="py-3 px-4 font-semibold whitespace-nowrap"
                     >
-                      Room / Suite
+                      Accommodation and location
                     </th>
                     <th scope="col" className="py-3 px-4 font-semibold">
                       Admission Category
                     </th>
                     <th scope="col" className="py-3 px-4 font-semibold">
+                      Contact Number
+                    </th>
+                    <th scope="col" className="py-3 px-4 font-semibold">
                       Emergency Contact
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 px-4 font-semibold whitespace-nowrap"
+                    >
+                      Admission Date
                     </th>
                     <th scope="col" className="py-3 px-4 font-semibold">
                       Status
@@ -230,12 +287,13 @@ export function ResidentManagement() {
                   id="residents-tbody"
                   className="divide-y divide-outline-variant/60 text-body-sm"
                   rows={grid.visible}
-                  columns={8}
+                  columns={10}
                   render={(record) => (
                     <ResidentRow
                       key={record.id}
                       record={record}
                       open={ui.show}
+                      edit={ui.editRecord}
                     />
                   )}
                 />
@@ -249,7 +307,7 @@ export function ResidentManagement() {
                 </span>{" "}
                 of{" "}
                 <span className="font-semibold text-on-surface">
-                  {grid.matched.length}
+                  {grid.total}
                 </span>{" "}
                 admitted residents
               </div>
@@ -305,7 +363,7 @@ export function ResidentManagement() {
                     id="profile-res-id"
                     className="font-code text-code-md px-2.5 py-0.5 rounded bg-primary-container text-primary font-bold"
                   >
-                    {ui.profile?.id}
+                    {ui.profile?.number}
                   </span>
                   <span
                     id="profile-res-status-badge"
@@ -513,6 +571,46 @@ export function ResidentManagement() {
               </div>
             </div>
           </div>
+          {ui.profile && (
+            <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {[
+                ["Resident email", ui.profile.email],
+                ["Guardian phone", ui.profile.guardianDetails?.phone],
+                ...Object.entries(contactFields).flatMap(([key, label]) => [
+                  ["Emergency contact " + label, ui.profile?.emergencyDetails?.[key]],
+                  ["Guardian " + label, ui.profile?.guardianDetails?.[key]],
+                ]),
+                ...Object.entries(medicalFields).map(([key, label]) => [label, ui.profile?.medical?.[key]]),
+              ].filter(([, value]) => value).map(([label, value]) => (
+                <div key={label}>
+                  <dt className="font-semibold">{label}</dt>
+                  <dd className="whitespace-pre-wrap">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          <section
+            aria-label="Accommodation history"
+            className="mt-4 mb-4 space-y-2"
+          >
+            <h3 className="font-semibold">Accommodation history</h3>
+            <PortalDataStatus
+              loading={ui.detailLoading}
+              error={ui.detailError}
+            />
+            {ui.profile?.history?.length ? (
+              <ul className="text-body-sm space-y-1">
+                {ui.profile.history.map((event, index) => (
+                  <li key={event.date + index}>
+                    {event.date.slice(0, 10)} · {event.action}
+                    {event.target ? " · " + event.target : ""}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              !ui.detailLoading && <p>No history recorded.</p>
+            )}
+          </section>
           <div className="pt-4 border-t border-outline-variant flex items-center justify-between">
             <span className="text-body-sm text-outline flex items-center gap-1.5">
               <span
@@ -521,7 +619,7 @@ export function ResidentManagement() {
               >
                 verified
               </span>{" "}
-              Dossier encrypted &amp; audit-compliant
+              Local development record
             </span>
             <div className="flex items-center gap-2">
               <button
@@ -534,6 +632,7 @@ export function ResidentManagement() {
               <button
                 type="button"
                 className="px-4 py-2 bg-primary text-on-primary rounded-md text-label-md font-label hover:bg-tertiary focus-visible:ring-2 focus-visible:ring-primary"
+                disabled={ui.detailLoading}
                 onClick={ui.edit}
               >
                 Edit Resident Details
@@ -546,6 +645,8 @@ export function ResidentManagement() {
         editor={ui.editor}
         dismiss={ui.dismissEditor}
         submit={ui.submit}
+        error={ui.error}
+        pending={ui.pending}
       />
     </PortalFrame>
   );

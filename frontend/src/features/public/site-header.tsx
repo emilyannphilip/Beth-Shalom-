@@ -29,6 +29,42 @@ export function SiteHeader({
     timer.current = setTimeout(() => setMenuVisible(false), 270);
   }
   useEffect(() => {
+    const element = header.current;
+    if (!element) return;
+    const styles = document.documentElement.style;
+    const measureHeight = () => {
+      styles.setProperty(
+        "--public-header-height",
+        Math.ceil(element.getBoundingClientRect().height) + "px",
+      );
+    };
+    measureHeight();
+    const observer = new ResizeObserver(measureHeight);
+    observer.observe(element);
+
+    let fragmentFrame = 0;
+    const clearRestoredFragment = () => {
+      cancelAnimationFrame(fragmentFrame);
+      fragmentFrame = requestAnimationFrame(() => {
+        const target = document.getElementById(window.location.hash.slice(1));
+        if (!target?.closest("main")) return;
+        const top = target.getBoundingClientRect().top;
+        if (top >= 0 && top < element.getBoundingClientRect().bottom)
+          target.scrollIntoView({ block: "start" });
+      });
+    };
+    window.addEventListener("pageshow", clearRestoredFragment);
+    if (document.readyState === "complete") clearRestoredFragment();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("pageshow", clearRestoredFragment);
+      cancelAnimationFrame(fragmentFrame);
+      styles.removeProperty("--public-header-height");
+    };
+  }, []);
+
+  useEffect(() => {
     const media = window.matchMedia("(min-width: 1280px)");
     function onPointerDown(event: PointerEvent) {
       if (
@@ -66,7 +102,7 @@ export function SiteHeader({
   }, []);
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-md shadow-[0_2px_12px_rgba(7,36,26,0.06)]"
+      className="sticky top-0 z-50 bg-surface/90 backdrop-blur-md shadow-[0_2px_12px_rgba(7,36,26,0.06)]"
       ref={header}
     >
       <div className="bg-surface-container-low py-1.5 px-margin-mobile md:px-margin">
